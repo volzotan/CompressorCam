@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_PLUMBUM
+	bool "python-plumbum"
+	help
+	  Plumbum: shell combinators library.
+
+	  https://plumbum.readthedocs.io

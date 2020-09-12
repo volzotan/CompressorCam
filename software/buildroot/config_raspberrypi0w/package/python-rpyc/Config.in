@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_RPYC
+	bool "python-rpyc"
+	select BR2_PACKAGE_PYTHON_PLUMBUM # runtime
+	help
+	  Remote Python Call (RPyC), a transparent and symmetric RPC
+	  library.
+
+	  http://rpyc.readthedocs.org

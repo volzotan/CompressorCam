@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_EXIFREAD
+	bool "python-exifread"
+	help
+	  Read Exif metadata from tiff and jpeg files.
+
+	  https://github.com/ianare/exif-py

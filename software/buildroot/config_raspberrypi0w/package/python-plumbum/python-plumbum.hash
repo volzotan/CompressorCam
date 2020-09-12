@@ -1,0 +1,5 @@
+# md5, sha256 from https://pypi.org/pypi/plumbum/json
+md5	12ecd2aae436525e606e8e1114853525  plumbum-1.6.8.tar.gz
+sha256	8571f2f9657e00dc22549d9e92db3fdec5674bf509fe60c5c9b4081fd8f6ab92  plumbum-1.6.8.tar.gz
+# Locally computed sha256 checksums
+sha256	77a0a64fb8c44a8b408f196060ba50c3366295e06dd47b4461a67ecc58b0ee00  LICENSE

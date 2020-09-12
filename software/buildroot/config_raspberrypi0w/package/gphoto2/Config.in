@@ -1,0 +1,11 @@
+config BR2_PACKAGE_GPHOTO2
+	bool "gphoto2"
+	select BR2_PACKAGE_POPT
+	select BR2_PACKAGE_LIBGPHOTO2
+        help
+          gPhoto2 is a free, redistributable, ready to use set of digital 
+          camera software applications for Unix-like systems, written by 
+          a whole team of dedicated volunteers around the world. 
+          It supports more than 2500 cameras.
+
+          http://www.gphoto.org/

@@ -1,0 +1,1 @@
+ssh buildroot date -s @`( date -u +"%s" )`

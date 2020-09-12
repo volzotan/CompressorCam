@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Start the zerobox trashcam....
+#
+
+cd /home/pi/zerobox
+
+case "$1" in
+  start)
+    printf "Starting Trashcam: "
+    python3 trashcam.py & 
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+    ;;
+  stop)
+    printf "Stopping Trashcam: "
+    # TODO...
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+    ;;
+  restart|reload)
+    "$0" stop
+    "$0" start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?

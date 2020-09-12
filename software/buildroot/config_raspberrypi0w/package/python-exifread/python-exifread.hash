@@ -1,0 +1,5 @@
+# md5, sha256 from https://pypi.org/pypi/exifread/json
+md5	8f5099e11e2137e0ce5acbec91c219be  ExifRead-2.1.2.tar.gz
+sha256	79e244f2eb466709029e8806fe5e2cdd557870c3db5f68954db0ef548d9320ad  ExifRead-2.1.2.tar.gz
+# Locally computed sha256 checksums
+sha256	31351c223b1a69ab7c106a3426aa9ae35852a8cdad9636de3a7ded0c5589a898  LICENSE.txt

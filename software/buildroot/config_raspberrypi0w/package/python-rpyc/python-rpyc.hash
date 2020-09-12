@@ -1,0 +1,5 @@
+# md5, sha256 from https://pypi.org/pypi/rpyc/json
+md5	6133671fb0775757d5957c56c039fffd  rpyc-4.1.2.tar.gz
+sha256	0df276076891797bbaaff322cc6debb02e10817426bba00a9beca915053a8a91  rpyc-4.1.2.tar.gz
+# Locally computed sha256 checksums
+sha256	6beffb21c0d8876d32d443bd5d2dfa391511203103d7ad439845a7c73ede8d53  LICENSE
