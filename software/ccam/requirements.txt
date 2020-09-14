@@ -1,0 +1,5 @@
+pyserial
+psutil
+exifread
+requests
+picamera # required for trashcam

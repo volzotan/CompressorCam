@@ -1,38 +1,43 @@
+#!/bin/sh
+
+HOSTNAME="compressorcam"
 
 # remount main partition as RW
-ssh buildroot 'mount -o remount,rw /dev/root /'
+ssh $HOSTNAME 'mount -o remount,rw /dev/root /'
 
 # create /boot dir so fstab can mount the boot partition
-ssh buildroot 'mkdir /boot'
-ssh buildroot 'mkdir /media/storage'
-# ssh buildroot 'mkdir /media/external_storage'
+ssh $HOSTNAME 'mkdir /boot'
+ssh $HOSTNAME 'mkdir /media/storage'
+# ssh $HOSTNAME 'mkdir /media/external_storage'
 
 # ------------------------------------------
 
 # echo "resize partition and reboot"
-# scp resize_fs.sh buildroot:/root
-# ssh buildroot 'sh /root/resize_fs.sh'
+# scp resize_fs.sh $HOSTNAME:/root
+# ssh $HOSTNAME 'sh /root/resize_fs.sh'
 
 # echo "sleep 20s"
 # sleep 20
 
 # echo "finishing resizing partitions"
-# ssh buildroot 'resize2fs /dev/mmcblk0p2'
+# ssh $HOSTNAME 'resize2fs /dev/mmcblk0p2'
 
 # ------------------------------------------
 
 echo "creating new partition and reboot"
-scp create_fs.sh buildroot:/root
-scp remount_rw.sh buildroot:/root
-ssh buildroot 'sh /root/create_fs.sh'
+scp create_fs.sh $HOSTNAME:/root
+scp remount_rw.sh $HOSTNAME:/root
+ssh $HOSTNAME 'sh /root/create_fs.sh'
 
 echo "sleep 20s"
 sleep 20
 
 echo "format new partition"
-ssh buildroot 'mke2fs -t ext4 /dev/mmcblk0p3'
+# ssh $HOSTNAME 'mke2fs -t ext4 /dev/mmcblk0p3'
+# ssh $HOSTNAME 'mkexfatfs -n CCSTORAGE /dev/mmcblk0p3'
+ssh $HOSTNAME 'mkfs.vfat -F 32 -n CCSTORAGE /dev/mmcblk0p3'
 
-ssh buildroot 'reboot'
+ssh $HOSTNAME 'reboot'
 
 echo "sleep 20s"
 sleep 20
@@ -57,7 +62,7 @@ sh buildroot_clean.sh
 
 echo "\n---"
 echo "download pip packages"
-ssh buildroot 'sh /home/pi/zerobox/buildroot_install.sh'
+ssh $HOSTNAME 'sh /home/pi/zerobox/buildroot_install.sh'
 
 echo "DONE! reboot..."
-ssh buildroot 'reboot'
+ssh $HOSTNAME 'reboot'

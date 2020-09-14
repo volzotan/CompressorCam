@@ -1,0 +1,1 @@
+arduino-cli compile -b arduino:samd:arduino_zero_native

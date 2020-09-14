@@ -1,0 +1,1 @@
+http://raspberrypi.local:8080/?action=stream

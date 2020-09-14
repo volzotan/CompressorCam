@@ -1,0 +1,21 @@
+# save as /etc/systemd/system/ccam.service
+
+[Unit]
+Description=CompressorCamera Service
+After=local-fs.target
+DefaultDependencies=no
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/pi/ccam
+ExecStart=/home/pi/ccam/ccam.py
+SyslogIdentifier=ccam
+StandardOutput=syslog
+StandardError=syslog
+Restart=no
+
+[Install]
+#WantedBy=multi-user.target
+WantedBy=sysinit.target
