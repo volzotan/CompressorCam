@@ -458,6 +458,10 @@ if __name__ == "__main__":
 
     log.info("------------------------------------------")
 
+    if not os.path.ismount(BASE_DIR):
+        log.error("mounting {} failed. exit!".format(BASE_DIR))
+        exit(1)
+
     try: 
         os.makedirs(OUTPUT_DIR_1)
         log.debug("created dir: {}".format(OUTPUT_DIR_1))
