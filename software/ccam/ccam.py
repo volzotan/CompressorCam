@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 import exifread
 import picamera
 
-from devices import TimeboxController
+from devices import CompressorCameraController
 
 from PIL import Image
 
@@ -56,7 +56,7 @@ OUTPUT_DIR_4                    = BASE_DIR + "captures_low3"
 OUTPUT_DIR_5                    = BASE_DIR + "captures_low4"
 OUTPUT_FILENAME                 = "cap"
 
-LOG_FILE                        = BASE_DIR + "log_zkam.log"
+LOG_FILE                        = BASE_DIR + "log_ccam.log"
 
 SERIAL_PORT                     = "/dev/ttyAMA0"
 
@@ -67,9 +67,9 @@ INTERVAL                        = 60 # in sec
 MAX_ITERATIONS                  = 3000
 
 """                      
-┌─┐┌─┐┬┌┬┐┬─┐┌─┐┌─┐┌─┐┌─┐┬─┐┬┌─┌─┐┌┬┐┌─┐┬─┐┌─┐
-┌─┘├┤ │ │ ├┬┘├─┤├┤ ├┤ ├┤ ├┬┘├┴┐├─┤│││├┤ ├┬┘├─┤
-└─┘└─┘┴ ┴ ┴└─┴ ┴└  └  └─┘┴└─┴ ┴┴ ┴┴ ┴└─┘┴└─┴ ┴
+┌─┐┌─┐┌┬┐┌─┐┬─┐┌─┐┌─┐┌─┐┌─┐┬─┐┌─┐┌─┐┌┬┐
+│  │ ││││├─┘├┬┘├┤ └─┐└─┐│ │├┬┘│  ├─┤│││
+└─┘└─┘┴ ┴┴  ┴└─└─┘└─┘└─┘└─┘┴└─└─┘┴ ┴┴ ┴
 
 INFO:
 
@@ -399,6 +399,7 @@ if __name__ == "__main__":
 
     # subloggers
     exifread_logger = logging.getLogger("exifread").setLevel(logging.INFO)
+    pil_logger = logging.getLogger("PIL").setLevel(logging.INFO) # PIL.TiffImagePlugin
     devices_logger = logging.getLogger("devices").setLevel(logging.INFO)
 
     # create formatter
@@ -436,12 +437,11 @@ if __name__ == "__main__":
 
     # ---------------------------------------------------------------------------------------
 
-    log.info("")
-    log.info("--------------------------------------------------")
-    log.info("  ┌─┐┌─┐┬┌┬┐┬─┐┌─┐┌─┐┌─┐┌─┐┬─┐┬┌─┌─┐┌┬┐┌─┐┬─┐┌─┐  ")
-    log.info("  ┌─┘├┤ │ │ ├┬┘├─┤├┤ ├┤ ├┤ ├┬┘├┴┐├─┤│││├┤ ├┬┘├─┤  ")
-    log.info("  └─┘└─┘┴ ┴ ┴└─┴ ┴└  └  └─┘┴└─┴ ┴┴ ┴┴ ┴└─┘┴└─┴ ┴  ")
-    log.info("--------------------------------------------------")
+    log.info("------------------------------------------")
+    log.info(" ┌─┐┌─┐┌┬┐┌─┐┬─┐┌─┐┌─┐┌─┐┌─┐┬─┐┌─┐┌─┐┌┬┐  ")
+    log.info(" │  │ ││││├─┘├┬┘├┤ └─┐└─┐│ │├┬┘│  ├─┤│││  ")
+    log.info(" └─┘└─┘┴ ┴┴  ┴└─└─┘└─┘└─┘└─┘┴└─└─┘┴ ┴┴ ┴  ")
+    log.info("------------------------------------------")
 
     ap = argparse.ArgumentParser()
     ap.add_argument("-p", "--persistent-mode", type=bool, default=False, help="")
@@ -456,7 +456,7 @@ if __name__ == "__main__":
     log.info("MODULO RAW        : {}".format(MODULO_RAW))
     log.info("EVEN ODD DELETION : {}".format(EVEN_ODD_DELETION_CAPTURE_1))
 
-    log.info("--------------------------------------------------")
+    log.info("------------------------------------------")
 
     try: 
         os.makedirs(OUTPUT_DIR_1)
@@ -486,7 +486,7 @@ if __name__ == "__main__":
     pool = ThreadPoolExecutor(2)
 
     try:
-        controller = TimeboxController.find_by_portname(SERIAL_PORT)
+        controller = CompressorCameraController.find_by_portname(SERIAL_PORT)
         
         if controller is not None:
 
@@ -521,7 +521,7 @@ if __name__ == "__main__":
 
             try:
                 status = int(status)
-                if status == TimeboxController.STATE_STREAM:
+                if status == CompressorCameraController.STATE_STREAM:
 
                     log.info("entering stream mode")
                     subprocess.call(["mjpg_stream.sh"], shell=True)
@@ -575,7 +575,7 @@ if __name__ == "__main__":
         else:
             image_info = trigger()
 
-        log.info("--------------------------")
+        log.info("------------------------")
 
     except Exception as e:
         log.error("error: [{}] {}".format(type(e), e))
@@ -753,7 +753,7 @@ if __name__ == "__main__":
     diff = (datetime.now() - start).total_seconds()
     print("sync done. took: {:.3f} sec".format(diff))
 
-    print("--------------------------")
+    print("------------------------")
 
     diff = datetime.now().timestamp() - start_global
     print("total runtime           : {:.3f} sec".format(diff))

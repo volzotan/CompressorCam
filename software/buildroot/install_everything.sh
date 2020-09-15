@@ -50,19 +50,19 @@ sh set_date.sh
 
 # upload_zerobox.sh takes care of RW-remount
 echo "\n---"
-echo "uploading zerobox files"
-sh upload_zerobox.sh
+echo "uploading ccam program files"
+sh upload_program_files.sh
 
-echo "\n---"
-echo "deleting files"
-sh buildroot_clean.sh
+# echo "\n---"
+# echo "deleting files"
+# sh buildroot_clean.sh
 
 # install script need to access /boot/config.txt and cmdline.txt 
 # so boot partition needs to be mounted for this
 
 echo "\n---"
 echo "download pip packages"
-ssh $HOSTNAME 'sh /home/pi/zerobox/buildroot_install.sh'
+ssh $HOSTNAME 'sh /home/pi/ccam/buildroot_install.sh'
 
 echo "DONE! reboot..."
 ssh $HOSTNAME 'reboot'

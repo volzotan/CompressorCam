@@ -1,18 +1,19 @@
 #!/bin/sh
+
 #
-# Start the zerobox onshot....
+# Start the CompressorCam service....
 #
 
-cd /home/pi/zerobox
+cd /home/pi/ccam
 
 case "$1" in
   start)
-    printf "Starting Oneshot: "
-    python3 oneshot.py
+    printf "Starting CompressorCam: "
+    python3 ccam.py & 
     [ $? = 0 ] && echo "OK" || echo "FAIL"
     ;;
   stop)
-    printf "Stopping Oneshot: "
+    printf "Stopping CompressorCam: "
     # TODO...
     [ $? = 0 ] && echo "OK" || echo "FAIL"
     ;;
