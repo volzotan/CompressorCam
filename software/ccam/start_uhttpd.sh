@@ -1,3 +1,3 @@
 #!/bin/sh
 
-uhttpd -h /var/www -p 192.168.2.2:80
+uhttpd -h /var/www -p 10.0.0.10:80
