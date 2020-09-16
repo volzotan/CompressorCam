@@ -96,6 +96,8 @@ gpu_mem_512=256
 
 def read_exif_data(filename):
 
+    log = logging.getLogger()
+
     with open(filename, 'rb') as f:
         metadata = exifread.process_file(f)
 
@@ -117,15 +119,16 @@ def read_exif_data(filename):
 
         # Aperture (e.g. 5.6)
 
-        aperture_val = metadata["EXIF FNumber"].values[0]
+        aperture = 8 # default value (may be set for HQ module)
+        if "EXIF FNumber" in metadata:
+            aperture_val = metadata["EXIF FNumber"].values[0]
 
-        if aperture_val.num == 0 or aperture_val.den == 0:
-            aperture = 8 # default value (shouldnt happen with picam)
-            log.error("aperture missing! EV value calculation will be wrong")
+            if aperture_val.num == 0 or aperture_val.den == 0:
+                log.debug("aperture value is 0")
+            else:
+                aperture = aperture_val.num / aperture_val.den
         else:
-            aperture = aperture_val.num / aperture_val.den
-
-        log = logging.getLogger()
+            log.debug("aperture value is missing")
 
         log.info("Exif exposure time      : {}".format(shutter_speed))
         log.info("Exif aperture           : {}".format(aperture))
@@ -423,12 +426,6 @@ if __name__ == "__main__":
 
     # ---------------------------------------------------------------------------------------
 
-    # # TODO: wifi off
-    # try:
-    #     subprocess.call(["ifdown", "wlan0"])
-    # except Exception as e:
-    #     log.info("disabling wifi error: {}".format(e))
-
     # tvservice off
     try:
         subprocess.call(["tvservice", "-o"])    
@@ -457,34 +454,6 @@ if __name__ == "__main__":
     log.info("EVEN ODD DELETION : {}".format(EVEN_ODD_DELETION_CAPTURE_1))
 
     log.info("------------------------------------------")
-
-    if not os.path.ismount(BASE_DIR):
-        log.error("mounting {} failed. exit!".format(BASE_DIR))
-        exit(1)
-
-    try: 
-        os.makedirs(OUTPUT_DIR_1)
-        log.debug("created dir: {}".format(OUTPUT_DIR_1))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_2)
-        log.debug("created dir: {}".format(OUTPUT_DIR_2))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_3)
-        log.debug("created dir: {}".format(OUTPUT_DIR_3))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_4)
-        log.debug("created dir: {}".format(OUTPUT_DIR_4))
-    except FileExistsError as e:
-        pass
 
     image_info = None
     pool = ThreadPoolExecutor(2)
@@ -520,15 +489,55 @@ if __name__ == "__main__":
 
             d = datetime.fromtimestamp(secs)
             log.debug("setting system time to {}".format(d.strftime('%Y-%m-%d %H:%M:%S')))
+        else:
+            log.warning("setting system time failed, no controller found")
+    except Exception as e:
+        log.error("setting system time failed: {}".format(e))
 
+    # checking for directories
+
+    if not os.path.ismount(BASE_DIR):
+        log.error("mounting {} failed. exit!".format(BASE_DIR))
+        # TODO: show error LED on controller
+        exit(1)
+
+    try: 
+        os.makedirs(OUTPUT_DIR_1)
+        log.debug("created dir: {}".format(OUTPUT_DIR_1))
+    except FileExistsError as e:
+        pass
+
+    try: 
+        os.makedirs(OUTPUT_DIR_2)
+        log.debug("created dir: {}".format(OUTPUT_DIR_2))
+    except FileExistsError as e:
+        pass
+
+    try: 
+        os.makedirs(OUTPUT_DIR_3)
+        log.debug("created dir: {}".format(OUTPUT_DIR_3))
+    except FileExistsError as e:
+        pass
+
+    try: 
+        os.makedirs(OUTPUT_DIR_4)
+        log.debug("created dir: {}".format(OUTPUT_DIR_4))
+    except FileExistsError as e:
+        pass
+
+    # checking for actions
+
+    try:
+        if controller is not None:
             status = controller.ping()
-
             try:
                 status = int(status)
                 if status == CompressorCameraController.STATE_STREAM:
 
                     log.info("entering stream mode")
-                    subprocess.call(["mjpg_stream.sh"], shell=True)
+                    
+                    subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
+                    subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
 
                     log.debug("logging shutdown")
                     logging.shutdown()
@@ -539,24 +548,15 @@ if __name__ == "__main__":
             except Exception as e:
                 log.error("parsing controller status failed: {}".format(e))
         else:
-            log.warning("setting system time failed, no controller found")
+            log.warning("checking for controller actions failed, no controller found")
     except Exception as e:
-        log.error("setting system time failed: {}".format(e))
-
-    # try:
-    #     if controller is not None:
-    #         controller.get_actions()
-    #         subprocess.run(["sh", "mjpg_stream.sh"], shell=True, check=True)
-    #     else:
-    #         log.warning("checking for controller actions failed, no controller found")
-    # except Exception as e:
-    #     log.error("checking for controller actions failed: {}".format(e))
+        log.error("running controller actions failed: {}".format(e))
 
     try:
-
         free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
         if free_space_mb < MIN_FREE_SPACE:
             log.error("NO SPACE LEFT ON DEVICE (directory: {}, free space: {:.2f}, min free space: {:.2f}".format(OUTPUT_DIR_1, free_space_mb, MIN_FREE_SPACE))
+            # TODO: red LED on controller
             raise Exception("no space left on device")
         else:
             log.debug("free space in {}: {:.2f}mb".format(OUTPUT_DIR_1, free_space_mb))

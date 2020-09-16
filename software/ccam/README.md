@@ -1,0 +1,1 @@
+`ccam.py` and `devices.py` are the only files required for barebones functionality. 
