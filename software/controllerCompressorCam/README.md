@@ -1,7 +1,8 @@
 This is the firmware for the camera controller board. Main job of the board is to turn the Raspberry Pi Zero on and off in predefined intervals.
-The microcontroller used for this is the Atmel SAMD21 (the Arduino Zero chip) and as such this hardware is Arduino IDE compatible.
+The microcontroller used for this is the Atmel SAMD21 (the Arduino Zero chip) and thus this hardware is Arduino IDE compatible.
 
-For compiling and flashing, install the Arduino IDE or the Arduino CLI and either compile via IDE or by running `sh compile.sh && sh upload.sh`.
+The provided firmware is Arduino-based, so for compiling and flashing either the Arduino IDE or the Arduino CLI is required.
+Either compile via IDE or by running `sh compile.sh && sh upload.sh`.
 
 Usage:
 
