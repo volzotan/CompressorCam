@@ -143,7 +143,7 @@ class CompressorCameraController(Controller):
         controller_list = []
         
         all_ports = list(serial.tools.list_ports.comports())
-        log.debug("detecting CompressorCameraController: found {} ports".format(len(all_ports)))
+        log.debug("detecting CompressorCameraController: found {} port(s)".format(len(all_ports)))
         for port in all_ports:
             if "zero" in port[1].lower():
                 potential_controller = CompressorCameraController(port[0])

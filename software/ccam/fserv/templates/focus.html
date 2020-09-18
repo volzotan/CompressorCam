@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+        <script type="text/javascript">
+            window.onload = function() {
+                
+                var prev = document.getElementById("preview");
+
+                prev.addEventListener("load", function () {
+                    console.log("reload complete");
+                    prev.classList.remove("loading");
+                }, false);
+
+                prev.addEventListener("click", function () {
+                    console.log("reload");
+                    prev.classList.add("loading");
+                    prev.src = "{{ url_for('video_feed') }}" + "#" + new Date().getTime();
+                }, false);
+            }
+        </script>
+
+    <div id="focus-container">
+        <img id="preview" class="focus-image" src="{{ url_for('video_feed') }}">
+        <div class="lds-dual-ring"></div>
+    </div>
+
+    <span>Click image to reload</span>
+
+{% endblock %}

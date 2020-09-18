@@ -1,0 +1,19 @@
+<!doctype html>
+    <title>CompressorCamera</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <script src="{{ url_for('static', filename='d3.min.js') }}"></script> -->
+    
+<div class="page">
+  <h3><a href="/">CompressorCamera</a></h3> 
+  <!--
+  <div class="metanav">
+    <a href="{{ url_for('root') }}">root</a>
+  </div>
+  -->
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>
