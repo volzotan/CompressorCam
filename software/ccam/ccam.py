@@ -75,11 +75,12 @@ INFO:
 
 Serial Console:
 
-ttyAMA0 is the PL011 UART controller (the good one) if no wifi firmware is 
-enabled, the UART behind /dev/ttyAMA0 is used. If wifi firmware is enabled, 
-/boot/config.txt needs the enable_uart=1 option and ttyS0 (mini UART, the bad one) 
-is used for UART. Move (or disable) BT by setting --add-miniuart-bt-overlay in 
-the buildroot script (this adds the dtoverlay=miniuart-bt option in config.txt)
+ttyAMA0 is linked to the PL011 UART controller (the good one). The BT module occupies
+this by default. If enable_uart=1 in /boot/config.txt is set, ttyS0 (mini UART, the bad one) 
+is available and can be used for serial. Better option: either disable BT (dtoverlay=disable-bt)
+or move BT to the mini UART (dtoverlay=miniuart-bt) via config.txt.
+Buildroot does the latter if --add-miniuart-bt-overlay is set.
+
 more info:
 https://www.abelectronics.co.uk/kb/article/1035/raspberry-pi-3--4-and-zero-w-serial-port-usage
 https://www.raspberrypi.org/documentation/configuration/uart.md
