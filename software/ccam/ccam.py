@@ -73,15 +73,33 @@ MAX_ITERATIONS                  = 3000
 
 INFO:
 
-The maximum resolution of the V2 camera may require additional GPU memory when operating at low framerates (<1fps). 
-Increase gpu_mem in /boot/config.txt if you encounter “out of resources” errors when attempting long-exposure captures with a V2 module.
+Serial Console:
 
-The maximum exposure time is currently 6 seconds on the V1 camera module, and 10 seconds on the V2 camera module. 
-Remember that exposure time is limited by framerate, so you need to set an extremely slow framerate before setting shutter_speed.
+ttyAMA0 is the PL011 UART controller (the good one) if no wifi firmware is 
+enabled, the UART behind /dev/ttyAMA0 is used. If wifi firmware is enabled, 
+/boot/config.txt needs the enable_uart=1 option and ttyS0 (mini UART, the bad one) 
+is used for UART. Move (or disable) BT by setting --add-miniuart-bt-overlay in 
+the buildroot script (this adds the dtoverlay=miniuart-bt option in config.txt)
+more info:
+https://www.abelectronics.co.uk/kb/article/1035/raspberry-pi-3--4-and-zero-w-serial-port-usage
+https://www.raspberrypi.org/documentation/configuration/uart.md
+
+Camera Module:
+
+The maximum resolution of the V2 camera may require additional GPU memory when 
+operating at low framerates (<1fps). Increase gpu_mem in /boot/config.txt if you 
+encounter “out of resources” errors when attempting long-exposure captures with 
+a V2 module.
+
+The maximum exposure time is currently 6 seconds on the V1 camera module, and 
+10 seconds on the V2 camera module. Remember that exposure time is limited by 
+framerate, so you need to set an extremely slow framerate before setting 
+shutter_speed.
 
 -- from: https://picamera.readthedocs.io/en/release-1.13/fov.html#hardware-limits
 
-PiCamera creates problems when used with python 3.8.1
+PiCamera creates problems when used with python 3.8.1 
+(3.8.2 realeased, so not an issue anymore)
 
 -- from: https://github.com/waveform80/picamera/issues/604
 
