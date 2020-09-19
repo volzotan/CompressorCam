@@ -17,11 +17,13 @@
  *  R  ---  Reduce Interval
  *  I  ---  Increase Interval
 
- *  E  ---  Print EEPROM
- *  K  ---  Kill/reset EEPROM data
- *  
- *  Q  ---  Read Value
- *  W  ---  Write Value
+     *  E  ---  Print EEPROM
+     *  K  ---  Kill/reset EEPROM data
+     *  
+     *  Q  ---  Read Value
+     *  W  ---  Write Value
+
+ *  V  ---  Version Info
 
  *  [...]
  */
@@ -191,6 +193,12 @@ void executeCommand() {
             // replace already existing next trigger
             nextTrigger = currentTrigger + TRIGGER_INTERVAL_INC; 
             okSerial();
+        break; 
+
+        case 'V': // Version Info
+            SERIAL.print("K ");
+            SERIAL.print(VERSION);
+            SERIAL.println();
         break; 
         
         default:

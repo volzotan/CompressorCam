@@ -107,9 +107,18 @@ void led(int r, int g, int b) {
 
 // -------------------------------- BATTERY -------------------------------- //
 
+int getCellNum(float voltage) {
+    if (voltage >= 8.5) {
+        return 3;
+    } else {
+        return 2;
+    }
+}
+
 boolean checkBattHealth() {
 
     float c0 = getBatteryVoltage();
+    int cell_num = getCellNum(c0);
 
     if (c0 < 2.0) {
         DEBUG_PRINT("Batt Health: not connected");
@@ -118,7 +127,7 @@ boolean checkBattHealth() {
         return true;
     }
 
-    if (c0 > 2.0 && c0 < LIPO_CELL_MIN * LIPO_CELL_NUM) {
+    if (c0 > 2.0 && c0 < LIPO_CELL_MIN * cell_num) {
         DEBUG_PRINT("Battery voltage below threshold!");
         DEBUG_PRINT(String(c0));
       
@@ -129,24 +138,24 @@ boolean checkBattHealth() {
     return true;
 }
 
-float voltageDivider(float input) {
-    return ((input / 1024) * VDBASEVOLTAGE) / ( (float) VDRESISTOR2 / (VDRESISTOR1 + VDRESISTOR2) );
-}
-
 float getBatteryPercentage() {
-    // discard first measurement
-    analogRead(PIN_BATT_DIRECT);
 
-    float voltage = voltageDivider((float) analogRead(PIN_BATT_DIRECT));
+    float voltage = getBatteryVoltage();
+    int cell_num = getCellNum(voltage);
 
-    if (voltage > 1.0) {
-        return (voltage - LIPO_CELL_MIN * LIPO_CELL_NUM) / (((LIPO_CELL_MAX - LIPO_CELL_MIN) * LIPO_CELL_NUM) / 100.0);
+    if (voltage > 2.0) {
+        return (voltage - LIPO_CELL_MIN * cell_num) / (((LIPO_CELL_MAX - LIPO_CELL_MIN) * cell_num) / 100.0);
     } else {
         return -1;  
     }
 }
 
+float voltageDivider(float input) {
+    return ((input / 1024) * VDBASEVOLTAGE) / ( (float) VDRESISTOR2 / (VDRESISTOR1 + VDRESISTOR2) );
+}
+
 float getBatteryVoltage() {
+
     // discard first measurement
     analogRead(PIN_BATT_DIRECT);
 

@@ -14,16 +14,15 @@
 
 // ----------- MISC -----------
 
-#define VERSION                         11.0
+#define VERSION                         12.0
 
 #define VDBASEVOLTAGE                    3.3
 #define VDRESISTOR1                      100
-#ifndef LIPO_3S
+
+#ifdef CONTROLLER_LEGACY
     #define VDRESISTOR2                   62
-    #define LIPO_CELL_NUM                  2
 #else
     #define VDRESISTOR2                   33
-    #define LIPO_CELL_NUM                  3
 #endif
 
 // ----------- ERROR CODES -----------

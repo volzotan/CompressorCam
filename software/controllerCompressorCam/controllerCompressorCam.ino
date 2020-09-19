@@ -4,14 +4,14 @@
 #include "Adafruit_MCP9808.h"
 #include <Adafruit_NeoPixel.h>
 
-#define DEBUG
+// #define DEBUG
 
-// #define SHUTDOWN_ON_LOW_BATTERY
+#define SHUTDOWN_ON_LOW_BATTERY
 // #define DEEP_SLEEP
 // #define HOST_DEFAULT_POWERED_ON
 // #define WAIT_ON_BOOT_FOR_SERIAL
-#define TEMP_SENSOR_AVAILABLE
-#define LIPO_3S
+// #define TEMP_SENSOR_AVAILABLE
+#define CONTROLLER_LEGACY
 
 #define SERIAL Serial1
 #define SERIAL_DEBUG SerialUSB
