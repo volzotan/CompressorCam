@@ -1,0 +1,24 @@
+- name: Examples
+  link: /examples/
+  new_window: false
+  highlight: false
+
+- name: How it works
+  link: /howitworks/
+  new_window: false
+  highlight: false
+
+- name: Build your own
+  link: /assembly/
+  new_window: false
+  highlight: false
+
+- name: About
+  link: /about/
+  new_window: false
+  highlight: false
+
+- name: Get a Kit
+  link: https://www.tindie.com/products/21222/
+  new_window: true
+  highlight: true
