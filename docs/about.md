@@ -6,15 +6,15 @@ The Digital Solargraphy camera is the indirect result of a very unreliable scann
 
 # Frequently (and infrequently) Asked Questions:  
 
-### Can I manufacture it myself?
+### Can I manufacture it completely by myself?
 
 Yes! All necessary information including the source-files for software and hardware is on [github](https://github.com/volzotan/CompressorCam). However, you will need to source the fasteners, the PCB and components and the ND-filter (links are in the Bill of Materials).
+
+If you did build your own, I always appreciate if you get in touch with me and show me your results!
 
 ### Can I just print the printable parts myself?
 
 Yes, just let me know and I'll prepare a kit without printed parts, containing only electronics and fasteners (that's less expensive and maybe even easier when it comes to shipping internationally).
-
-If you did build your own, I always appreciate if you get in touch with me and show me your results!
 
 ### Can you assemble it for me?
 
