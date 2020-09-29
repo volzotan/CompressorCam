@@ -1,0 +1,32 @@
+<script src="{{ site.baseurl }}/js/lightbox-plus-jquery.min.js"></script>
+
+<script>
+
+    // find every image that has the enable_lightbox class and place 
+    // it in an lightbox-compatible anchor to lightboxify
+
+    $("img.enable_lightbox").each(function() {
+        //console.log($(this).attr("src"));
+
+        var url         = $(this).attr("src")
+            alt_text    = $(this).attr("alt")
+            image_name  = url.split("\/").pop();
+
+        // replace image with scaled down version (link to lightbox with original size)
+        var url_scaled  = "{{ site.baseurl }}/assets_scaled" + url.substring("{{ site.baseurl }}/assets".length);
+        $(this).attr("src", url_scaled);
+
+        $(this).wrap(
+            "<a href=\"" + url + "\" " +
+            "data-lightbox=\"" + image_name + "\" " +
+            "data-title=\"" + alt_text + "\" " +
+            "data-alt=\"" + alt_text + "\" " +
+            "><a/>")
+    });
+
+    lightbox.option({
+      'fadeDuration': 200,
+      'imageFadeDuration': 200
+    });
+    
+</script>

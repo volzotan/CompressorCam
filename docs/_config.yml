@@ -2,8 +2,8 @@
 # Site
 
 title: Digital Solargraphy
-url: "https://proud-alligator.cloudvent.net"
-baseurl:
+url: "http://localhost:4000"
+baseurl: 
 google_analytics_key:
 google_maps_javascript_api_key:
 disqus_shortname:
@@ -12,10 +12,6 @@ disqus_shortname:
 # Build
 
 timezone: Etc/UTC
-
-collections:
-  staff_members:
-    _hide_content: true
 
 paginate: 10
 paginate_path: "/blog/:num/"
