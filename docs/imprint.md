@@ -1,7 +1,11 @@
-Responsible for this website is:
+---
+title: Imprint
+---
+
+Legal information: This website is run by  
 
 Christopher Getschmann  
-Prager Str. 1C (C46)  
-99427 Weimar, Germany
+Prager Str. 1 (C46)  
+D-99427 Weimar (Germany)  
 
-Contact: christopher@volzo.de
+If you want to reach out to me: solargraphy@volzo.de
