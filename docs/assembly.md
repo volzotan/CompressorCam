@@ -220,7 +220,7 @@ Merge the resulting images in your preferred software such as Photoshop or Gimp.
 ### Additional info:
 
 #### Never flip the batteries!
-I assume it is not necessary to state this, but I will do it nevertheless: never place the batteries in the holder reversed! Never confuse the battery holder cables! Never use a conductive screwdriver to remove the batteries from the holder! You are using 18650 Lithium-Ion cells. Reverse polarity will destroy the electronics instantly. Short-circuiting the batteries itself will release enough energy to get glowing red metal in a matter of seconds. Cells will be impossible to touch and may explode. Do not discharge the batteries below 3V per battery. 
+I assume it is not necessary to state this, but I will do it nevertheless: never place the batteries in the holder reversed! Never confuse the battery holder cables! Never use a conductive screwdriver to remove the batteries from the holder! Reverse polarity will destroy the electronics instantly. You are using 18650 Lithium-Ion cells and short-circuiting these batteries will release enough energy to get glowing red metal in a matter of seconds. Cells will be impossible to touch and may explode. Do not discharge the batteries below 3V per battery (the CompressorCamera board will shutdown and cease to work before the batteries reach deep-discharge levels).
 
 #### Do not leave the batteries in the camera over an extended amount of time
 Even when the switch is set to off the circuit will draw an incredibly tiny but constant amount of power. Remove the batteries when not using the camera for several weeks and recharge them before the next usage.

@@ -32,11 +32,13 @@ Same shop as the Pi Zero.
 
 I did a comparison of several wide angle lenses [here](http://volzo.de/posts/raspberry-wide-angle-lenses). I recommend purchasing the unbranded 3.2mm wide angle lens for really wide shots (what you usually want for solargraphy). However, buying the official 6mm lens is not a bad choice either.
 
+One option is to order from shops like B and H ([link](https://www.bhphotovideo.com/c/product/1447550-REG/marshall_electronics_cs_3_2_12mp_12mp_4k_uhd_3_2mm_fixed.html)) that may ship internationally or directly from Aliexpress ([link](https://aliexpress.com/item/32999824737.html?spm=a2g0s.9042311.0.0.6c7e4c4dntGzch)).
+
 ### 18650 batteries
 
 Lithium-Ion batteries have some international shipping restrictions, that's why it's a good idea to buy them domestically. When buying batteries you need to check for two criteria:
 
-  * The same size of batteries (18650) is available with different chemistries. Most common are Lithium-Ion cells (Li-Ion, sometimes referred to as Lithium-Polymer LiPo, too) and that's what we need. If a battery is labelled as LiFePo the cell is using a different chemistry with different voltages when fully charged/empty and the controller board will not be able to correctly shut down if the battery is depleted.
+  * The same size of batteries (18650) is available with different chemistries. Most common are `Lithium-Ion` cells (Li-Ion, sometimes falsely referred to as Lithium-Polymer/LiPo, too) and Li-Ion is what we need. If a battery is labelled as `LiFePo` the cell is using a different chemistry with different voltages when fully charged/empty and the controller board will not be able to correctly shut down if the battery is depleted.
   * Some batteries are slightly more expensive and come with a protection circuit (labelled as protected). This protection circuit sits on top of the batteries positive pole and makes the battery slightly longer so it may not fit the holder. Avoid these batteries.
 
 I use Sanyo/Panasonic NCR18650GA cells, however, any unprotected Li-Ion battery will work fine.

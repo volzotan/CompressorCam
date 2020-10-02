@@ -4,6 +4,8 @@ title: About the camera kit
 
 The Digital Solargraphy camera is the indirect result of a very unreliable scanner and an incredible amount of frustation with 4x5 negatives. Eventually culminating in the sale of half a dozen analogue cameras and a journey of several years of looking for a way to achieve long exposures with a bit of computation and a digital camera. After I [wrote](http://volzo.de/posts/digital-solargraphy/) about my project enough people nagged me about how they can build their own camera to convince me to redesign the hardware and software in a way that other people can assemble it themselves and do something interesting with it. 
 
+If you want to get in touch with me, write me a mail at <a href="mailto:solargraphy@volzo.de">solargraphy@volzo.de</a>
+
 # Frequently (and infrequently) Asked Questions:  
 
 ### Can I manufacture it completely by myself?

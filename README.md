@@ -1,2 +1,2 @@
-This is the complete hard- and software for the CompressorCam, a camera to capture digital solargraphies.
-For more information, refer to the website [TODO].
+This is the complete hard- and software for the CompressorCam, a camera to capture digital solargraphy images.
+For more information, refer to the website [Digital Solargraphy](http://digitalsolargraphy.com).
