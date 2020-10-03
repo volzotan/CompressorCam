@@ -35,6 +35,10 @@ p {
     font-size: 1.1em;
 }
 
+hr {
+    border: 1px solid #CCC;
+}
+
 .heroimage {
     padding-bottom: 0;
     height: 570px;
