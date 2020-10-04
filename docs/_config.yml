@@ -2,8 +2,8 @@
 # Site
 
 title: "Digital Solargraphy"
-url: "http://localhost:4000"
-baseurl: 
+url: "https://volzotan.github.io"
+baseurl: "CompressorCam"
 google_analytics_key: "UA-179520414-1"
 
 # -----
