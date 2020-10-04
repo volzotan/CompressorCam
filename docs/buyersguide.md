@@ -1,5 +1,6 @@
 ---
 title: Buyers Guide
+permalink: buyers_guide
 ---
 
 There are a few things you need to buy separately to complete the camera kit:
