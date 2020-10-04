@@ -12,14 +12,6 @@ footer {
 
 .hero {
     background: #020044;
-    
- /*   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url("../images/hamburg_hero.jpg");
-    background-size: cover;
-
-    background-position: bottom;
-    background-repeat: no-repeat;*/
-    
-
     padding-bottom: 0;
 }
 
@@ -41,7 +33,7 @@ hr {
 
 .heroimage {
     padding-bottom: 0;
-    height: 570px;
+    max-height: 570px;
 }
 
 .heroimage img {
