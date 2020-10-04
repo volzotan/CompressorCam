@@ -1,12 +1,10 @@
 # ----
 # Site
 
-title: Digital Solargraphy
+title: "Digital Solargraphy"
 url: "http://localhost:4000"
 baseurl: 
-google_analytics_key:
-google_maps_javascript_api_key:
-disqus_shortname:
+google_analytics_key: "UA-179520414-1"
 
 # -----
 # Build
