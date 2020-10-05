@@ -71,19 +71,20 @@ Second step: remove the tripod mount. For this you will need an Allen key of siz
 ![Camera Module disassembled]( {{ site.baseurl }}/assets/{{ page.imgdir }}/105.jpg ){:.enable_lightbox}
 
 The Camera Module is fully disassembled now. 
+Now we need to put it back together with the correct plastic parts.
 
 ![Camera Module materials]( {{ site.baseurl }}/assets/{{ page.imgdir }}/110.jpg ){:.enable_lightbox}
-![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/111.jpg ){:.enable_lightbox}
-
-We will now attach the Camera Module to main plastic part that holds everything. While you fit the module in two ways in the plastic part, we need to orient it as shown in the picture.
 
 ![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/112.jpg ){:.enable_lightbox}
 
-Next step: grab the orange camera cable and align it as shown in the photo. Wide end facing the camera, exposed metal side facing towards the circuit board. Push the cable in the connector (about 2mm) and hold it with two fingers while you secure the connector again. The camera module now needs to be screwed to the corresponding 3d-printed plastic part.
+First step: grab the orange camera cable and align it as shown in the photo. Wide end facing the camera, exposed metal side facing towards the circuit board. Push the cable in the connector (about 2mm) and hold it with two fingers while you secure the connector again. The camera module now needs to be screwed to the corresponding 3d-printed plastic part.
 
 ![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/113.jpg ){:.enable_lightbox}
 ![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/114.jpg ){:.enable_lightbox}
 ![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/115.jpg ){:.enable_lightbox}
+
+We will now attach the Camera Module to main plastic part that holds everything. While you are able to fit the module in two ways in the plastic part, we need to orient it as shown in the picture below.
+
 ![Camera Module connector]( {{ site.baseurl }}/assets/{{ page.imgdir }}/116.jpg ){:.enable_lightbox}
 
 A word of caution again: the plastic part is manufactured with a 3d-printer. Excessive force while tightening the screws will break the plastic. Always use enough torque so that the screw sits nicely, but never use more force than you would be able to apply with two fingers on the screwdriver.
@@ -147,12 +148,17 @@ If they are overtightened they may deform or crack the plastic. If they are unde
 Finally: attach the lens. Grab your lens and remove the rear cap from the lens and the front cap from the camera module. If you have a CS-mount lens such as the official 6mm wide-angle, the adapter ring needs to be removed. Screw the lens in and you're done (for now).
 
 ![Lens assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/210.jpg ){:.enable_lightbox}
-![Lens assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/211.jpg ){:.enable_lightbox}
+![Lens explanation]( {{ site.baseurl }}/assets/{{ page.imgdir }}/lens_explanation.jpg ){:.enable_lightbox}  
+
+Do not remove the backfocus ring. If you are using a C-Mount lens, do not remove the C-Mount adapter ring.
+If you are using a CS-lens such as the Raspberry Pi's official 6mm wide-angle lens, remove the C-Mount adapter ring then screw the lens into the backfocus ring.
+
+![Lens assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/211.jpg ){:.enable_lightbox}  
 (If you've got a CS-lens, it should look like this)
 
 ![battery holder connection]( {{ site.baseurl }}/assets/{{ page.imgdir }}/220.jpg ){:.enable_lightbox}
 
-Last step: plug in the battery holder. The CompressorCamera board comes with a screw terminal to fix arbitrary battery holders or power sources to the board. Use the blue screwdriver that came with the Camera Module to loosen the screw of the screw terminal and push in the leads of the battery holder gently. Make absolutely sure that you do not swap the polarity. Red **must** be connected to plus (+), Black to minus (-). Tighten the screws of the screw terminal again and check if everything is secured.
+Last step: plug in the battery holder. The CompressorCamera board comes with a screw terminal to fix arbitrary battery holders or power sources to the board. Use the blue screwdriver that came with the Camera Module to loosen the screw of the screw terminal and push in the leads of the battery holder gently. Make absolutely sure that you do not swap the polarity. Red **must** be connected to plus (+), Black to minus (-). Tighten the screws of the screw terminal again and check if everything is secured. It's okay to tighten these two screws a bit more than those connecting to 3d-printed parts.
 
 ![battery holder connection]( {{ site.baseurl }}/assets/{{ page.imgdir }}/221.jpg ){:.enable_lightbox}
 ![battery holder connection]( {{ site.baseurl }}/assets/{{ page.imgdir }}/222.jpg ){:.enable_lightbox}
@@ -161,7 +167,7 @@ Last step: plug in the battery holder. The CompressorCamera board comes with a s
 
 ![sd-card]( {{ site.baseurl }}/assets/{{ page.imgdir }}/223.jpg ){:.enable_lightbox}
 
-Grab the SD-card and push it into the SD-card connector of the Pi Zero. Contacts need to be facing toward the board.
+Grab the SD-card and push it into the SD-card connector of the Pi Zero. Contacts need to be facing toward the Raspberry Pi Zero (as shown in the image above).
 
 Last step before doing the first boot: Backfocus adjustment.
 
@@ -174,7 +180,11 @@ In order to do that, we need to use the blue screwdriver that came with the Came
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/224.jpg ){:.enable_lightbox}
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/225.jpg ){:.enable_lightbox}
 
-Put the fully charged batteries in the battery holder (mind the orientation!) and push the power switch to ON. The camera will now start and wait for 10s for user input. If you push the button while the LED is blinking, the camera will start in maintenance mode, create a Wifi network and will wait for further input. If the button is not pressed, camera will start normally and begins capturing.
+Put the fully charged batteries in the battery holder (mind the orientation!) and push the power switch to ON. 
+
+![battery leads]( {{ site.baseurl }}/assets/{{ page.imgdir }}/battery_leads.jpg ){:.enable_lightbox}
+
+The camera will now start and wait for 10s for user input. If you push the button while the LED is blinking, the camera will start in maintenance mode, create a Wifi network and will wait for further input. If the button is not pressed, camera will start normally and begins capturing.
 
 TODO: add screenshot of interface
 
@@ -184,19 +194,60 @@ If you did find the best focus position and your camera output is nice and sharp
 ### <a name="finish"></a>Finish the enclosure
 
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/300.jpg ){:.enable_lightbox}
+
+Grab the printed spacers and the 35mm long M2.5 screws. 
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/301.jpg ){:.enable_lightbox}
+
+Place the four screws in the holes and slip the spacers over the screws. The rounded side should be facing inwards.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/302.jpg ){:.enable_lightbox}
+
+Screw the camera assembly to the spacers and join insert and camera.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/303.jpg ){:.enable_lightbox}
+
+And that's how the insert with the camera electronics should look like.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/310.jpg ){:.enable_lightbox}
+
+Now we need to assemble the top element of the enclosure, fastening the filter and it's printed front element.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/311.jpg ){:.enable_lightbox}
+
+Now get the neutral density filter out of the box and place it cautiously in the top part of the enclosure.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/312.jpg ){:.enable_lightbox}
+
+Place the filter front element on top of the filter. The gap in the plastic part should face downwards when placing the enclosure outdoors so rain hitting the filter can drain.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/313.jpg ){:.enable_lightbox}
+
+Fasten the filter front element with the four tiniest screws found in the package.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/314.jpg ){:.enable_lightbox}
+
+Place the nut either in the upper or lower tripod nut cavity. Since the enclosure is (almost) symmetrical, it doesn't make a difference which one you are using.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/315.jpg ){:.enable_lightbox}
+
+The tripod nut should be sitting flush as shown in the image above.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/320.jpg ){:.enable_lightbox}
+
+Last step: screw the insert with the camera into the upper enclosure half and close the enclosure.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/321.jpg ){:.enable_lightbox}
+
+Screw in the four 6mm screws to connect the insert to the top part of the enclosure.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/322.jpg ){:.enable_lightbox}
+
+When placing the insert with the camera and the battery holder in the enclosure, make sure that the batteries in the holder are facing outwards. If the battery holder is placed like in the photo above, it is easier to stash the cables.
+
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/323.jpg ){:.enable_lightbox}
+
+Use the last four screws (50mm long) to close the enclosure. 
 
 ### <a name="take"></a>Take images
 
@@ -212,7 +263,7 @@ On the CCSTORAGE partition you will find four folders and a text file that conta
 
 ### <a name="postprocessing"></a>Postprocess
 
-Download the compressor software for Windows or MacOS. Start the application and select the first folder (`capture_regular`) as input. Set the processing mode to `stack` and hit start. The compressor software will now combine all correctly exposed images and compute based on the metadata a long exposure image. If you did not select a specific output directory, the output will be stored in `captures_regular_stacked`.
+Download the compressor software for Windows or MacOS. You will find the latest release [here](https://github.com/volzotan/CompressorCam/releases). Start the application and select the first folder (`capture_regular`) as input. Set the processing mode to `stack` and hit start. The compressor software will now combine all correctly exposed images and compute based on the metadata a long exposure image. If you did not select a specific output directory, the output will be stored in `captures_regular_stacked`.
 
 Repeat this with the other three directories but set the processing mode to `peak`. This may take a few minutes depending on the number of captures.
 
