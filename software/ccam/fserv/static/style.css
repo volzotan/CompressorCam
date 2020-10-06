@@ -1,18 +1,5 @@
-.page {
-    padding: 10px;
-    padding-top: 3px;
-}
-
-.page-title {
-    color: #999;
-}
-
-h3 {
-    margin-top: 4px;
-}
-
-h3 a {
-    color: #333;
+.container-fluid {
+    padding-top: 15px;
 }
 
 .loading {
