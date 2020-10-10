@@ -10,7 +10,7 @@ rsync -av                           \
 --include="requirements.txt"        \
 --include="buildroot_install.sh"    \
 --include="start_stream.sh"         \
---include="start_uhttpd.sh"         \
+--include="start_server.sh"         \
 --include="start_wifi.sh"           \
 --exclude="*"                       \
 ~/GIT/CompressorCam/software/ccam compressorcam:/home/pi

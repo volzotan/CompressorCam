@@ -119,6 +119,8 @@ class CompressorCameraController(Controller):
     CMD_ZERO_ON         = "Z 1"
     CMD_ZERO_OFF        = "Z 0"
 
+    CMD_LED             = "L"
+
     CMD_RED_INTERVAL    = "R"
     CMD_INC_INTERVAL    = "I"
 
@@ -238,6 +240,13 @@ class CompressorCameraController(Controller):
     def get_next_invocation(self):
         try:
             return self._send_command(self.CMD_NEXT_INVOCATION)
+        except Exception as e:
+            log.debug(e)
+            raise e
+
+    def set_led(self, r, g, b):
+        try:
+            return self._send_command(self.CMD_LED, r << 16 | g << 8 | b << 0)
         except Exception as e:
             log.debug(e)
             raise e

@@ -46,7 +46,7 @@ IMAGE_FORMAT                    = "jpeg"    # JPG format # V2: ~ 4.5 mb | 14 mb 
 # IMAGE_FORMAT                    = "yuv"   # YUV420 format
 # IMAGE_FORMAT                    = "png"   # PNG format # V2: ~ 9 mb
 WRITE_RAW                       = True
-MODULO_RAW                      = 10        # only every n-th image contains RAW data, set to None to use WRITE_RAW
+MODULO_RAW                      = 5        # only every n-th image contains RAW data, set to None to use WRITE_RAW
 
 BASE_DIR                        = "/media/storage/"
 OUTPUT_DIR_1                    = BASE_DIR + "captures_regular"
@@ -275,6 +275,16 @@ def trigger():
 
     # starts hidden preview for 3A automatically
     camera = picamera.PiCamera(sensor_mode=3) 
+
+    # sensor modes:
+    # MODE  : SETTING           : CAMERA 
+    # 0     : automatic         : all
+    # 2     : 1    <  fps <= 15 : v1
+    # 3     : 1/6  <= fps <= 1  : v1   
+    # 2     : 1/10 <= fps <= 15 : v2
+    # 3     : 1/10 <= fps <= 15 : v2
+    # 2     : 0.1-50fps         : HQ (2x2 binned = half resolution)
+    # 3     : 0.005-10fps       : HQ
 
     camera.exposure_mode = "verylong"
     
@@ -554,6 +564,8 @@ if __name__ == "__main__":
                 if status == CompressorCameraController.STATE_STREAM:
 
                     log.info("entering stream mode")
+
+                    controller.set_led(0, 0, 10)
                     
                     subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
                     subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
@@ -755,7 +767,7 @@ if __name__ == "__main__":
                 logging.shutdown()
 
                 subprocess.call(["sync"])
-                subprocess.call(["umount {}".format(BASE_DIR)])
+                # subprocess.call(["umount {}".format(BASE_DIR)])
                 
                 # important, damage to filesystem: 
                 # wait a few sec before poweroff!

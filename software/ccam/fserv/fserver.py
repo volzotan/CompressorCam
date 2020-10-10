@@ -1,22 +1,26 @@
 from flask import Flask, Response
 from flask import render_template, redirect, url_for, make_response, request
 
-from picamera.array import PiRGBArray
-import picamera
-
-from fractions import Fraction
-
-import cv2
-import numpy as np
-
+import subprocess
 import threading
 import time
 import datetime
 import io
+import shutil
+import psutil
+
+from picamera.array import PiRGBArray
+import picamera
+
+from PIL import Image
+from fractions import Fraction
 
 CROP_SIZE = [1280, 720]
 
+IMAGE_DIR = "/media/storage"
+
 CMD_SHUTDOWN        = "shutdown"
+CMD_REBOOT          = "reboot"
 CMD_STREAM_START    = "stream_start"
 CMD_STREAM_STOP     = "stream_stop"
 CMD_FOCUS_START     = "focus_start"
@@ -32,6 +36,8 @@ class CameraManager(object):
 
         self.camera.exposure_mode = "verylong"
         self.camera.meter_mode = "average"
+
+        self.stream = io.BytesIO()
 
         resolutions = {}
         resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
@@ -51,11 +57,24 @@ class CameraManager(object):
 
         self.camera.start_preview()
 
-    def capture(self):
+    def capture_array(self):
 
         self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
         self.camera.capture(self.rawCapture, format="bgr")
         return self.rawCapture.array
+
+    def capture(self):
+        
+        self.stream.seek(0)
+        self.stream.truncate()
+        
+        self.camera.capture(self.stream, format='jpeg')
+
+        # "Rewind" the stream to the beginning so we can read its content
+        self.stream.seek(0)
+        image = Image.open(self.stream)
+
+        return image
 
     def stop(self):
         self.camera.close()
@@ -70,26 +89,52 @@ def root():
 def overview():
 
     data = {
-        "total_space"       : 0,
-        "available_space"   : 0,
+        "total_space"       : None,
+        "available_space"   : None,
+        "uptime"            : None,
+        "temperature_cpu"   : None,
+        "temperature_ext"   : None,
+        "battery_volt"      : None,
+        "battery_perc"      : None, 
+        "controller_version": None,
     }
 
+    total, used, free = shutil.disk_usage("/")
+    data["total_space"] = "{:5.2f} GB".format(total / (2**30))
+    data["available_space"] = "{:5.2f} GB".format(free / (2**30))
+
+    data["uptime"] = "{:7.0f}s".format(time.time() - psutil.boot_time())
+
+    temp_str = str(subprocess.check_output(["vcgencmd", "measure_temp"]))
+    temp = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
+    data["temperature_cpu"] = temp
+
     return render_template("overview.html", data=data)
+
+
+@app.route("/settings")
+def settings():
+
+    data = {}
+
+    return render_template("settings.html", data=data)
 
 
 @app.route("/command/<cmd>")
 def command(cmd):
 
-    if cmd is CMD_SHUTDOWN:
+    if cmd.lower() == CMD_SHUTDOWN:
         subprocess.call("shutdown")
-    elif cmd is CMD_STREAM_START:
+    elif cmd == CMD_REBOOT:
+        subprocess.call("reboot")
+    elif cmd == CMD_STREAM_START:
         subprocess.call("sh ../start_stream.sh")
-    elif cmd is CMD_STREAM_STOP:
+    elif cmd == CMD_STREAM_STOP:
         pass
     else:
-        return "unknown command. Available commands: {}".format(ALL_COMMANDS)
+        return "unknown command {}".format(cmd)
 
-    return("...")
+    return("command executed.")
 
 
 @app.route("/stream")
@@ -100,15 +145,17 @@ def stream():
 def focus():
     return render_template("focus.html")
 
-def process_image(cameraManager, peak=None, crop=None, resize=None):
+def process_image_cv2(cameraManager, peak=None, crop=None, resize=None):
 
     with lock:
 
-        # cameraManager = CameraManager()
-        # frame = cameraManager.capture()
-        # cameraManager.stop()
-
-        frame = cameraManager.capture()
+        if cameraManager is None:
+            cameraManager = CameraManager()
+            time.sleep(0.1)
+            frame = cameraManager.capture_array()
+            cameraManager.stop()
+        else:
+            frame = cameraManager.capture_array()
 
         if crop is not None:
             frame = frame[
@@ -121,7 +168,7 @@ def process_image(cameraManager, peak=None, crop=None, resize=None):
         if peak is not None:
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            edges = cv2.Canny(gray, 120, 140)
+            edges = cv2.Canny(gray, 160, 200)
 
             kernel = np.ones((3, 3), np.uint8)
             dilation = cv2.dilate(edges, kernel, iterations=1)
@@ -137,6 +184,33 @@ def process_image(cameraManager, peak=None, crop=None, resize=None):
             return None
 
         return bytearray(encodedImage)
+
+
+def process_image(cameraManager, peak=None, crop=None, resize=None):
+
+    with lock:
+
+        if cameraManager is None:
+            cameraManager = CameraManager()
+            time.sleep(0.1)
+            img = cameraManager.capture()
+            cameraManager.stop()
+        else:
+            img = cameraManager.capture()
+
+        if crop is not None:
+            img = img.crop((
+                int(img.size[0]/2 - crop[0]/2), int(img.size[1]/2 - crop[1]/2), 
+                int(img.size[0]/2 + crop[0]/2), int(img.size[1]/2 + crop[1]/2) 
+            ))
+
+        if resize is not None:
+            pass
+
+        imgByteArr = io.BytesIO()
+        img.save(imgByteArr, format="JPEG")
+        imgByteArr = imgByteArr.getvalue()
+        return bytearray(imgByteArr)
 
 @app.route("/video_feed")
 def video_feed():
