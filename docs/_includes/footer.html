@@ -1,5 +1,3 @@
-<script src="{{ site.baseurl }}/js/lightbox-plus-jquery.min.js"></script>
-
 <script>
 
     // find every image that has the enable_lightbox class and place 
@@ -28,5 +26,9 @@
       'fadeDuration': 200,
       'imageFadeDuration': 200
     });
+
+    new Glide('.glide', {
+      type: 'carousel'
+    }).mount();
     
 </script>
