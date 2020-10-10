@@ -26,6 +26,7 @@ void initPins() {
     pinMode(PIN_BATT_DIRECT,     INPUT);
     pinMode(PIN_BUTTON,          INPUT);  
     pinMode(PIN_ZERO_FAULT,      INPUT);  
+    pinMode(PIN_MUX_STATUS,      INPUT);  
 
     pinMode(PIN_ZERO_EN,         OUTPUT);
     pinMode(PIN_PIXEL,           OUTPUT);
@@ -105,14 +106,39 @@ void led(int r, int g, int b) {
     pixels.show();
 }
 
+void ledBlink(uint8_t r, uint8_t g, uint8_t b) {
+    pixels.setPixelColor(0, pixels.Color(r, g, b));
+    pixels.show();
+    
+    ledBlinkColor = (r << 16) | (g << 8) | b;
+    ledBlinkTrigger = millis() + 1000;
+}
+
+void ledEvent() {
+    if (millis() > 0 && millis() > ledBlinkTrigger) {
+        ledBlinkTrigger += 1000;
+
+        if (pixels.getPixelColor(0) > 0) {
+            pixels.setPixelColor(0, 0);
+        } else {
+            pixels.setPixelColor(0, ledBlinkColor);
+        }
+        pixels.show();
+    }
+}
+
 // -------------------------------- BATTERY -------------------------------- //
 
 int getCellNum(float voltage) {
-    if (voltage >= 8.5) {
+    if (voltage >= 8.7) {
         return 3;
-    } else {
+    } 
+
+    if (voltage >= 5.7) {
         return 2;
     }
+
+    return 1;
 }
 
 boolean checkBattHealth() {

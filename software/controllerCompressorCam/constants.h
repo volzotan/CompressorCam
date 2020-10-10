@@ -6,6 +6,7 @@
 #define PIN_ZERO_FAULT                    A4 // PA05
 #define PIN_SERVO                          6 // PA20
 #define PIN_PIXEL                         10 // PA18
+#define PIN_MUX_STATUS                     2 // PA08                
 
 // ----------- OPTIONS -----------
 
@@ -14,16 +15,12 @@
 
 // ----------- MISC -----------
 
-#define VERSION                         12.0
+#define HARDWARE_REV             "undefined"
+#define VERSION                            0
 
 #define VDBASEVOLTAGE                    3.3
 #define VDRESISTOR1                      100
-
-#ifdef CONTROLLER_LEGACY
-    #define VDRESISTOR2                   62
-#else
-    #define VDRESISTOR2                   33
-#endif
+#define VDRESISTOR2                       33
 
 // ----------- ERROR CODES -----------
 

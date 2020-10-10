@@ -14,6 +14,8 @@
  *  D  ---  Read Debug Registers
  *  N  ---  Next Invocation
 
+ *  L  ---  Set LED                         (L uint32_t) W|R|G|B --> 32 bytes
+
  *  R  ---  Reduce Interval
  *  I  ---  Increase Interval
 
@@ -130,9 +132,9 @@ void executeCommand() {
         case 'T': // Temperature
 
             #ifdef TEMP_SENSOR_AVAILABLE
-                tempsensor.wake();
-
-                temp = tempsensor.readTempC();
+                lm75a.wakeup();
+                delay(10);
+                temp = lm75a.getTemperature();
                 if (temp == temp) { // is not NaN
                     SERIAL.print("K ");
                     SERIAL.print(temp, 4);
@@ -141,7 +143,7 @@ void executeCommand() {
                     errorSerial(ERRORCODE_NOT_AVAILABLE);
                 }
 
-                tempsensor.shutdown();
+                lm75a.shutdown();
             #else
                 errorSerial(ERRORCODE_NOT_AVAILABLE);
             #endif
@@ -177,6 +179,18 @@ void executeCommand() {
             SERIAL.println();
         break; 
 
+        case 'L': // Set LED
+
+            if (state != STATE_TRIGGER_WAIT) {
+                errorSerial(ERRORCODE_INVALID_PARAM);
+                break;
+            }
+
+            led(serialParam);
+
+            okSerial();
+        break; 
+
         case 'R': // Reduce Interval
             trigger_reduced_till = getMillis() + TRIGGER_INTERVAL_RED * 1 + 30*1000L;
             trigger_increased_till = -1;
@@ -197,6 +211,8 @@ void executeCommand() {
 
         case 'V': // Version Info
             SERIAL.print("K ");
+            SERIAL.print(HARDWARE_REV);
+            SERIAL.print(" ");
             SERIAL.print(VERSION);
             SERIAL.println();
         break; 

@@ -1,17 +1,18 @@
 #include <RTCZero.h>
-
 #include <Wire.h>
-#include "Adafruit_MCP9808.h"
 #include <Adafruit_NeoPixel.h>
 
-// #define DEBUG
+#include <M2M_LM75A.h> // LM75A Temp Sensor
+
+#include "global.h"
+#include "constants.h"
+
+#define DEBUG
+// #define WAIT_ON_BOOT_FOR_SERIAL
 
 #define SHUTDOWN_ON_LOW_BATTERY
 // #define DEEP_SLEEP
 // #define HOST_DEFAULT_POWERED_ON
-// #define WAIT_ON_BOOT_FOR_SERIAL
-// #define TEMP_SENSOR_AVAILABLE
-#define CONTROLLER_LEGACY
 
 #define SERIAL Serial1
 #define SERIAL_DEBUG SerialUSB
@@ -22,8 +23,8 @@
   #define DEBUG_PRINT(x)
 #endif
 
-#include "global.h"
-#include "constants.h"
+// #include "settings_revH.h"
+#include "settings_revI.h"
 
 // ---------------------------
 
@@ -56,8 +57,8 @@ boolean trigger_ended_dirty     = false;        // zero was shutdown by force (m
 char *inputBuffer           = (char*) malloc(sizeof(char) * 100);
 String serialInputString    = "";
 char serialCommand          = 0;
-int serialParam             = -1;
-int serialParam2            = -1;
+long serialParam            = -1;
+long serialParam2           = -1;
 
 // ---------------------------
 
@@ -65,9 +66,12 @@ RTCZero rtc;
 long now = -1;
 
 Adafruit_NeoPixel pixels(1, PIN_PIXEL, NEO_GRB + NEO_KHZ800);
+uint32_t ledBlinkColor = 0;
+long ledBlinkTrigger = 0;
 
 #ifdef TEMP_SENSOR_AVAILABLE
-    Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
+    // Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
+    M2M_LM75A lm75a;;
     float temp = 0;
 #endif 
 
@@ -82,9 +86,6 @@ void setup() {
 
     rtc.begin(true); // reset internal timer
 
-    // rtc.setHours(4);
-    // rtc.setMinutes(50);
-
     DEBUG_PRINT("INIT");
     DEBUG_PRINT("DEBUG MODE ON");
 
@@ -97,19 +98,9 @@ void setup() {
         DEBUG_PRINT("SerialUsb connected");
     #endif
 
-    // set the resolution mode of reading
-    // Mode  Resolution  SampleTime
-    //  0    0.5°C       30 ms
-    //  1    0.25°C      65 ms
-    //  2    0.125°C     130 ms
-    //  3    0.0625°C    250 ms
-
     #ifdef TEMP_SENSOR_AVAILABLE
-        if (!tempsensor.begin(0x18)) {
-            DEBUG_PRINT("temperature sensor not found");
-        } else {
-            tempsensor.setResolution(1); 
-        }
+        lm75a.begin();
+        lm75a.shutdown();
     #endif
 
     // battery life
@@ -118,31 +109,19 @@ void setup() {
 
         DEBUG_PRINT("battery low! stopping...");
         #ifdef SHUTDOWN_ON_LOW_BATTERY 
-
             stopAndShutdown();
-
-            // #ifndef DEBUG
-            //     led(50, 0, 0);
-            //     delay(1000);
-            //     stopAndShutdown();
-            // #else
-            //     DEBUG_PRINT("stopping aborted (DEBUG mode on)");
-            // #endif
-
         #else
             DEBUG_PRINT("stopping aborted (no SHUTDOWN_ON_LOW_BATTERY)");
         #endif
-
     }
 
     #ifdef DEBUG
-    
         pixels.clear();
 
         for (int i=0; i<50; i++) {
             SerialUSB.print(".");
             if (i%2 == 0) {
-                led(0, 50, 50);
+                led(10, 10, 0);
             } else {
                 led(0,  0, 0);
             }
@@ -152,6 +131,17 @@ void setup() {
         pixels.clear();
 
         DEBUG_PRINT("-----------------");
+        DEBUG_PRINT("Power source:");
+        if (digitalRead(PIN_MUX_STATUS)) {
+            DEBUG_PRINT("USB");
+        } else {
+            DEBUG_PRINT("BATTERY");
+
+            // if running from battery, flash bright
+            led(100, 100, 0);
+            delay(500);
+            pixels.clear();
+        }
         DEBUG_PRINT("Battery pin value:");
         analogRead(PIN_BATT_DIRECT);
         delay(100);
@@ -162,10 +152,13 @@ void setup() {
         DEBUG_PRINT(getBatteryPercentage());
         DEBUG_PRINT("Temperature [C]:");
         #ifdef TEMP_SENSOR_AVAILABLE
-            temp = tempsensor.readTempC();
+            lm75a.wakeup();
+            delay(10);
+            temp = lm75a.getTemperature();
             if (temp == temp) { // is not NaN
                 DEBUG_PRINT(temp);
             }
+            lm75a.shutdown();
         #else:
             DEBUG_PRINT("(temp sensor not available)");
         #endif
@@ -184,12 +177,20 @@ void setup() {
     // wait 5 seconds without disabling USB to allow uploads and check for stream-mode
     long bootDelay = millis() + 5000;
     boolean enterStreamMode = false;
+    boolean alternate = false;
     while (millis() < bootDelay) {
         if (buttonPressed(PIN_BUTTON)) { // stream mode
             enterStreamMode = true;
+            break;
         }
 
-        // TODO: flash LED to signal regular start 
+        if (alternate) {
+            led(10, 10, 10);
+        } else {
+            led(0,  0, 0);
+        }
+        alternate = !alternate;
+        delay(100);
     }
 
     if (enterStreamMode) {
@@ -198,22 +199,24 @@ void setup() {
         state = STATE_STREAM;
 
         DEBUG_PRINT("entering stream mode");
-        led(0, 0, 50);
-
-        // TODO: show stream state via LED
-
-        // TODO: shutdown after 5min
+        ledBlink(0, 0, 10);
 
     } else {
         DEBUG_PRINT("setup done");
 
         // let's go
-        nextTrigger = getMillis() + 1000;
+        nextTrigger = getMillis() + 2000;
+
+        led(0, 30, 0);
+        delay(1000);
+        led(0, 0, 0);
     }
+
 }
 
 void loop() { 
     serialEvent();  
+    ledEvent();
 
     switch(state) {
 
@@ -361,6 +364,16 @@ void stopAndShutdown() {
 
     switchZeroOn(false);
     pixels.clear();
+
+    for (int i=0; i<10; i++) {
+        if (i%2 == 0) {
+            led(30, 0, 0);
+        } else {
+            led(0,  0, 0);
+        }
+        delay(100);
+    }
+
     pixels.show();
 
     while(true) {
