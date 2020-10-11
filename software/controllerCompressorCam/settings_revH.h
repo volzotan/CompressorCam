@@ -1,5 +1,6 @@
-// #define TEMP_SENSOR_AVAILABLE
+// CompressorCam revH
 
 #define HARDWARE_REV                  "revH"
-#define VERSION                         12.0
-#define VDRESISTOR2                       62
+// #define POWER_MUX_AVAILABLE
+// #define TEMP_SENSOR_AVAILABLE
+#define VDRESISTOR2                       33

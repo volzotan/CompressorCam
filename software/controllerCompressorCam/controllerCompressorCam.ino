@@ -13,6 +13,7 @@
 #define SHUTDOWN_ON_LOW_BATTERY
 // #define DEEP_SLEEP
 // #define HOST_DEFAULT_POWERED_ON
+#define VERSION                     12.0
 
 #define SERIAL Serial1
 #define SERIAL_DEBUG SerialUSB
@@ -23,8 +24,22 @@
   #define DEBUG_PRINT(x)
 #endif
 
+// #include "settings_revG.h"
 // #include "settings_revH.h"
 #include "settings_revI.h"
+
+// ---------------------------
+
+#define TRIGGER_INTERVAL        120 *1000       // take picture every X seconds [ms]
+#define TRIGGER_INTERVAL_RED    600 *1000
+#define TRIGGER_INTERVAL_INC    60  *1000
+
+#define TRIGGER_MAX_ACTIVE      59  *1000       // zero & cam max time on [ms]
+// #define TRIGGER_CAM_DELAY       5   *1000    // turn camera on X seconds after zero [ms]
+// #define TRIGGER_WAIT_DELAYED    1   *1000    // wait for X seconds after zero requests shutdown [ms]
+#define TRIGGER_COUNT           10000           // max number of triggers
+
+#define STREAM_MODE_MAX_LIFETIME 5*60*1000
 
 // ---------------------------
 
@@ -40,17 +55,6 @@ long trigger_reduced_till       = -1;
 long trigger_increased_till     = -1;
 
 boolean trigger_ended_dirty     = false;        // zero was shutdown by force (max time active)
-
-#define TRIGGER_INTERVAL        120 *1000       // take picture every X seconds [ms]
-#define TRIGGER_INTERVAL_RED    600 *1000
-#define TRIGGER_INTERVAL_INC    60  *1000
-
-#define TRIGGER_MAX_ACTIVE      59  *1000       // zero & cam max time on [ms]
-// #define TRIGGER_CAM_DELAY       5   *1000    // turn camera on X seconds after zero [ms]
-// #define TRIGGER_WAIT_DELAYED    1   *1000    // wait for X seconds after zero requests shutdown [ms]
-#define TRIGGER_COUNT           10000           // max number of triggers
-
-#define STREAM_MODE_MAX_LIFETIME 5*60*1000
 
 // ---------------------------
 
@@ -131,17 +135,20 @@ void setup() {
         pixels.clear();
 
         DEBUG_PRINT("-----------------");
-        DEBUG_PRINT("Power source:");
-        if (digitalRead(PIN_MUX_STATUS)) {
-            DEBUG_PRINT("USB");
-        } else {
-            DEBUG_PRINT("BATTERY");
 
-            // if running from battery, flash bright
-            led(100, 100, 0);
-            delay(500);
-            pixels.clear();
-        }
+        #ifdef POWER_MUX_AVAILABLE
+            DEBUG_PRINT("Power source:");
+            if (digitalRead(PIN_MUX_STATUS)) {
+                DEBUG_PRINT("USB");
+            } else {
+                DEBUG_PRINT("BATTERY");
+
+                // if running from battery, flash bright
+                led(100, 100, 0);
+                delay(500);
+                pixels.clear();
+            }
+        #endif
         DEBUG_PRINT("Battery pin value:");
         analogRead(PIN_BATT_DIRECT);
         delay(100);
