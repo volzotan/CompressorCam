@@ -119,3 +119,10 @@ table td, table th{
 img.enable_lightbox {
     width: auto;
 }
+
+.glide__arrow {
+    border-color: #777;
+    color: #777;
+    box-shadow: none;
+    text-shadow: none;
+}

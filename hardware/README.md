@@ -1,9 +1,5 @@
 # Hardware:
 
-## Circuit Boards:
-
-Revision H
-
 ## Parameters for 3D-printing
 
 Print in PETG or similarly heat-resistant material.  
@@ -39,3 +35,16 @@ Avoid the color black, PETG temperatures after a few hours in the sun:
 |   1   |       |   Pi Zero camera cable short  |       |   
 |   1   |       |   Raspberry Pi Zero W |       |   
 |   1   |       |   Raspberry Pi Camera Module HQ   |       |   
+
+# Change Log: 
+
+## Circuit Boards:
+
+Revision I:
+
+  * new DCDC converter chip (TPS630701) allows 3-16V input (revH only supported 6-12V)
+  * board can now be powered via MicroUSB as well 
+
+Revision H:
+
+  * initial release
