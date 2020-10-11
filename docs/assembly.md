@@ -15,7 +15,7 @@ Steps:
   * [Copy the Data](#copy)
   * [Postprocessing](#postprocessing)
 
-One word of caution though: This is a very low volume DIY kit of 3D-printed parts, not industrial-grade perfect consumer goods. However, I did my best to make assembly as easy and reliable as possible, if you encounter issues, let me know and I help you out.
+One word of caution though: This is a very low volume DIY kit of 3D-printed parts, not industrial-grade perfect consumer goods. However, I did my best to make assembly as easy and reliable as possible, if you encounter issues, <a href="mailto:solargraphy@volzo.de?subject=assembly%20problems">let me know</a> and I help you out.
 
 ### <a name="materials"></a>Materials
 
@@ -196,7 +196,7 @@ After 30 seconds the camera is fully booted and you can connect to the `Compress
 
 ![webinterface screenshot]( {{ site.baseurl }}/assets/{{ page.imgdir }}/webinterface_screenshot.png ){:.enable_lightbox}
 
-If you face your camera to your ceiling and you got an very classic german wallpaper texture, then it would look like the image above.
+If you face your camera to your ceiling and you got a [very classic german wallpaper texture](https://en.wikipedia.org/wiki/Ingrain_wallpaper), then it would look like the image above.
 
 If you did find the best focus position and your camera output is nice and sharp, fasten the screw with the blue screwdriver. The lens is now secured and focussed and you are not able to rotate the backfocus ring any further. You can switch the camera off with the power switch on the board.
 
@@ -273,9 +273,9 @@ TODO PI ACT LED
 
 After a day or two, grab your camera again and open the enclosure. Make sure that the LED (see image) is not on before moving the switch to off and remove the SD-card.
 
-If you use Windows or MacOS the SD-card will show two partitions. One rather small one which you can ignore and a second one called CCSTORAGE. If you are using Linux, you will see a third ext4-formatted partition which contains the operating system, but you can ignore that.
+If you use Windows or MacOS, the SD-card will show two partitions. One rather small one which you can ignore and a second one called CCSTORAGE. If you are using Linux, you will see a third ext4-formatted partition which contains the operating system, but you can ignore that.
 
-On the CCSTORAGE partition you will find four folders and a text file that contains the log-output of the camera. Copy the four folders to your computer. Have a look at the `captures_regular` folder and see if you may need to delete the first or last few images (because the camera was running before you placed it on location).
+On the CCSTORAGE partition you will find four folders and a text file that contains the log-output of the camera. Copy the four folders to your computer and delete them from the SD-card to free up space for next time. Have a look at the `captures_regular` folder and see if you may need to delete the first or last few images (because the camera was running before you placed it on location).
 
 ### <a name="postprocessing"></a>Postprocess
 
