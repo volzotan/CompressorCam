@@ -1,0 +1,10 @@
+pillow
+# scipy
+# scikit-image
+# tifffile
+exifread
+matplotlib
+pyyaml
+
+gooey
+pyinstaller

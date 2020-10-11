@@ -1,0 +1,9 @@
+sudo apt-get install python-dev python-pyexiv2
+
+sudo pip install numpy
+sudo pip install matplotlib
+sudo pip install pyyaml
+
+# build the newest opencv3, not the one from the distribution repository (probably opencv2)
+# not listed opencv3 dependencies:
+sudo apt-get install libqt4-core libqt4-dev libqt4-gui qt4-dev-tools
