@@ -1,5 +1,10 @@
 <script>
 
+    document.getElementById("open-nav").onclick = function () {
+        document.body.classList.toggle("nav-open");
+        return false;
+    };
+
     // find every image that has the enable_lightbox class and place 
     // it in an lightbox-compatible anchor to lightboxify
 
