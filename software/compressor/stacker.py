@@ -12,8 +12,6 @@ import math
 from fractions import Fraction
 
 from PIL import Image
-# import cv2
-import tifffile as tiff
 import numpy as np
 
 import exifread
@@ -25,6 +23,7 @@ try:
 except ImportError as e:
     log = logging.getLogger("stacker")
     log.error("Importing Exiv2 failed. No metadata can be written. Error: {}".format(e))
+
 
 """
     Stacker loads every image in INPUT_DIRECTORY,
@@ -55,6 +54,17 @@ PROCESSING_MODE_PEAK            = "peak"
 
 DEFAULT_APERTURE                = 8.0
 EV_OFFSET                       = 26
+
+TIFF_SUPPORT                    = True
+
+try:
+    import cv2
+except ImportError as e:
+    log = logging.getLogger("stacker")
+    log.error("Importing cv2 failed. No TIFF support")
+    TIFF_SUPPORT = False
+
+import tifffile as tiff
 
 
 class Stopwatch(object):
@@ -98,6 +108,7 @@ class Stack(object):
     # misc
 
     EXIF_DATE_FORMAT                = '%Y:%m:%d %H:%M:%S'
+    VERSION_NUMBER                  = None
 
     # debug options
 
@@ -223,9 +234,6 @@ class Stack(object):
 
         self.log.debug("writing file: {}".format(filepath))
 
-        # Fast and easy way with OpenCV
-        # cv2.imwrite(filepath, s)
-
         if filename.endswith(".tif"):
             # taken from: https://blog.itsayellow.com/technical/saving-16-bit-tiff-images-with-pillow-in-python
             # size = (s.shape[1], s.shape[0])
@@ -234,7 +242,10 @@ class Stack(object):
             # img_out.frombytes(outpil)
             # img_out.save(filepath)
 
-            tiff.imwrite(filepath, s)
+            # tiff.imwrite(filepath, s)
+
+            # Fast and easy way with OpenCV
+            cv2.imwrite(filepath, s)
         else:
             # PIL does not support 16bit data directly
             # However, fromarray works fine for JPEGs
@@ -300,7 +311,10 @@ class Stack(object):
                     info["version"] = info["version"][:-1]
             except Exception as e:
                 self.log.warning("compressor version not available. Error: {}".format(str(e)))
-                info["version"] = "not-available"
+                if VERSION_NUMBER is None:
+                    info["version"] = "not-available"
+                else
+                    info["version"] = "{:5.2f}".format(VERSION_NUMBER)
 
             # compressing date
             info["compressing_date"] = datetime.datetime.now()
@@ -512,10 +526,15 @@ class Stack(object):
         # no faster method found for TIF images than openCVs imread (tested: PIL, imageio, libtiff)
         # Problem: PIL/pillow does not support RGB-16bit data (16bit grayscales work)
 
-        if filename.endswith(".tif") or filename.endswith(".tiff"):
-            # return cv2.imread(image_path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH) 
+        if filename.lower().endswith(".tif") or filename.lower().endswith(".tiff"):
 
-            return tiff.imread(image_path)
+            if not TIFF_SUPPORT:
+                log.error("No TIFF support (openCV not found). Exit.")
+                exit(-1)
+
+            return cv2.imread(image_path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH) 
+            # return tiff.imread(image_path)
+
         else: # assume JPEG
 
             # Note: if we use openCV to read the image we either need to write it with openCV as well or change the channel order

@@ -15,6 +15,8 @@ import yaml
 
 import logging as log
 
+VERSION = 1.00
+
 def blockstring_to_string(s):
 
     # s = s.replace("\n", "")
@@ -136,7 +138,18 @@ gooey_options = {
     "show_stop_warning":    False,
     "image_dir":            local_resource_path("icons"),
     "progress_regex":       r"processing image[\ ]*(?P<current>\d+) \/[\ ]*(?P<total>\d+)",
-    "progress_expr":        "current / total * 100"
+    "progress_expr":        "current / total * 100",
+    "menu":                 [{  'name': 'File', 
+                                'items': [{
+                                    'type': 'AboutDialog',
+                                    'menuTitle': 'About',
+                                    'name': 'Compressor',
+                                    'description': 'Merge images to create digital long exposure photographies',
+                                    'version': '{:5.2f}'.format(VERSION),
+                                    'website': 'https://github.com/volzotan/CompressorCam',
+                                    'developer': 'https://digitalsolargraphy.com/'
+                                }]
+                            }]
 }
 
 @Gooey(**gooey_options)

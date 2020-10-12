@@ -4,15 +4,10 @@
 ssh buildroot 'mount -o remount,rw /dev/root /'
 
 rsync -av                           \
---include="/*"                      \
---include="ccam.py"                 \
---include="devices.py"              \
---include="requirements.txt"        \
---include="buildroot_install.sh"    \
---include="start_stream.sh"         \
---include="start_server.sh"         \
---include="start_wifi.sh"           \
---exclude="*"                       \
+--delete                            \
+--exclude=".DS_Store"               \
+--exclude="*.pyc"                   \
+--exclude="README.md"               \
 ~/GIT/CompressorCam/software/ccam compressorcam:/home/pi
 
 # remount main partition as RO
