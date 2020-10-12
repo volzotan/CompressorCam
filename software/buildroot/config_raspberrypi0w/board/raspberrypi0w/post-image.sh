@@ -2,13 +2,10 @@
 
 set -e
 
-# BOARD_DIR="$(dirname $0)"
-# BOARD_NAME="$(basename ${BOARD_DIR})"
-# GENIMAGE_CFG="${BOARD_DIR}/genimage-${BOARD_NAME}.cfg"
+BOARD_DIR="$(dirname $0)"
+BOARD_NAME="$(basename ${BOARD_DIR})"
+GENIMAGE_CFG="${BOARD_DIR}/genimage-${BOARD_NAME}.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
-
-# even though we are in an external tree we want to use the original board/raspberrypi/genimage-raspberrypi0w.cfg
-GENIMAGE_CFG="board/raspberrypi/genimage-raspberrypi0w.cfg"
 
 for arg in "$@"
 do

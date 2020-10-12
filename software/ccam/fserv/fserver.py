@@ -21,6 +21,7 @@ IMAGE_DIR = "/media/storage"
 
 CMD_SHUTDOWN        = "shutdown"
 CMD_REBOOT          = "reboot"
+CMD_RESIZEFS        = "resizefs"
 CMD_STREAM_START    = "stream_start"
 CMD_STREAM_STOP     = "stream_stop"
 CMD_FOCUS_START     = "focus_start"
@@ -124,11 +125,15 @@ def settings():
 def command(cmd):
 
     if cmd.lower() == CMD_SHUTDOWN:
-        subprocess.call("shutdown")
+        subprocess.run(["shutdown"])
     elif cmd == CMD_REBOOT:
-        subprocess.call("reboot")
+        subprocess.run(["reboot"])
+    elif cmd == CMD_RESIZEFS:
+        subprocess.run(["sh", "/root/resize_fs.sh"])
+        return("the file system will be resized. This may take a minute. The camera will restart.")
+        # return redirect(url_for("/overview", messages=messages))
     elif cmd == CMD_STREAM_START:
-        subprocess.call("sh ../start_stream.sh")
+        subprocess.run(["sh", "../start_stream.sh"])
     elif cmd == CMD_STREAM_STOP:
         pass
     else:

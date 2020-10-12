@@ -530,29 +530,12 @@ if __name__ == "__main__":
         # TODO: show error LED on controller
         exit(1)
 
-    try: 
-        os.makedirs(OUTPUT_DIR_1)
-        log.debug("created dir: {}".format(OUTPUT_DIR_1))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_2)
-        log.debug("created dir: {}".format(OUTPUT_DIR_2))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_3)
-        log.debug("created dir: {}".format(OUTPUT_DIR_3))
-    except FileExistsError as e:
-        pass
-
-    try: 
-        os.makedirs(OUTPUT_DIR_4)
-        log.debug("created dir: {}".format(OUTPUT_DIR_4))
-    except FileExistsError as e:
-        pass
+    for directory_name in [OUTPUT_DIR_1, OUTPUT_DIR_2, OUTPUT_DIR_3, OUTPUT_DIR_4]:
+        try: 
+            os.makedirs(directory_name)
+            log.debug("created dir: {}".format(directory_name))
+        except FileExistsError as e:
+            pass
 
     # checking for actions
 
@@ -567,7 +550,23 @@ if __name__ == "__main__":
 
                     controller.set_led(0, 0, 10)
                     
-                    subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
+                    # subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
+                    # subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
+
+                    free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
+                    if free_space_mb < 100:
+                        log.debug("empty space on {:5.2f} below 100MB. initiating resize_fs.sh".format(free_space_mb))
+
+                        log.debug("logging shutdown")
+                        logging.shutdown()
+
+                        subprocess.run(["sh", "/root/resize_fs.sh"], check=True)
+
+                        sleep(3)
+                        exit(0)
+
+                    subprocess.run(["ifup", "wlan0"], check=True)
+                    # check for output?
                     subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
 
                     log.debug("logging shutdown")
