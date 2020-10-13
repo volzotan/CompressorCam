@@ -101,21 +101,29 @@ void switchZeroOn(boolean switchOn) {
     }
 }
 
-void led(int r, int g, int b) {
-    pixels.setPixelColor(0, pixels.Color(r, g, b));
+void led(uint32_t wrgb) {
+    ledBlinkTrigger = 0;
+    pixels.setPixelColor(0, wrgb);
     pixels.show();
 }
 
-void ledBlink(uint8_t r, uint8_t g, uint8_t b) {
-    pixels.setPixelColor(0, pixels.Color(r, g, b));
-    pixels.show();
+void led(int r, int g, int b) {
+    led(pixels.Color(r, g, b));
+}
+
+void ledBlink(uint32_t wrgb) {
+    led(wrgb);
     
-    ledBlinkColor = (r << 16) | (g << 8) | b;
+    ledBlinkColor = wrgb;
     ledBlinkTrigger = millis() + 1000;
 }
 
+void ledBlink(uint8_t r, uint8_t g, uint8_t b) {
+    ledBlink((r << 16) | (g << 8) | b);
+}
+
 void ledEvent() {
-    if (millis() > 0 && millis() > ledBlinkTrigger) {
+    if (ledBlinkTrigger > 0 && millis() > ledBlinkTrigger) {
         ledBlinkTrigger += 1000;
 
         if (pixels.getPixelColor(0) > 0) {

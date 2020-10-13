@@ -181,10 +181,10 @@ void executeCommand() {
 
         case 'L': // Set LED
 
-            if (state != STATE_TRIGGER_WAIT) {
-                errorSerial(ERRORCODE_INVALID_PARAM);
-                break;
-            }
+            // if (state != STATE_TRIGGER_WAIT) {
+            //     errorSerial(ERRORCODE_INVALID_PARAM);
+            //     break;
+            // }
 
             led(serialParam);
 

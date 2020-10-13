@@ -527,7 +527,7 @@ if __name__ == "__main__":
 
     if not os.path.ismount(BASE_DIR):
         log.error("mounting {} failed. exit!".format(BASE_DIR))
-        # TODO: show error LED on controller
+        controller.set_led(10, 0, 10)
         exit(1)
 
     for directory_name in [OUTPUT_DIR_1, OUTPUT_DIR_2, OUTPUT_DIR_3, OUTPUT_DIR_4]:
@@ -553,9 +553,9 @@ if __name__ == "__main__":
                     # subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
                     # subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
 
-                    free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
-                    if free_space_mb < 100:
-                        log.debug("empty space on {:5.2f} below 100MB. initiating resize_fs.sh".format(free_space_mb))
+                    total_space_mb = shutil.disk_usage(OUTPUT_DIR_1).total / (1024 * 1024)
+                    if total_space_mb < 100:
+                        log.debug("total space on {:5.2f} below 100MB. initiating resize_fs.sh".format(total_space_mb))
 
                         log.debug("logging shutdown")
                         logging.shutdown()
@@ -566,8 +566,8 @@ if __name__ == "__main__":
                         exit(0)
 
                     subprocess.run(["ifup", "wlan0"], check=True)
-                    # check for output?
-                    subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
+        
+                    pid = subprocess.Popen(["sh", "start_server.sh"], close_fds=True)
 
                     log.debug("logging shutdown")
                     logging.shutdown()
