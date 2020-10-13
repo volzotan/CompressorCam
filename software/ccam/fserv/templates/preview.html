@@ -14,13 +14,13 @@
                 prev.addEventListener("click", function () {
                     console.log("reload");
                     prev.classList.add("loading");
-                    prev.src = "{{ url_for('video_feed', crop='True') }}" + "#" + new Date().getTime();
+                    prev.src = "{{ url_for('video_feed', resize=1280) }}" + "#" + new Date().getTime();
                 }, false);
             }
         </script>
 
     <div id="focus-container">
-        <img id="preview" class="focus-image" src="{{ url_for('video_feed', crop='True') }}">
+        <img id="preview" class="focus-image" src="{{ url_for('video_feed', resize=1280) }}">
         <div class="lds-dual-ring"></div>
     </div>
 

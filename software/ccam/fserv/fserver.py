@@ -94,10 +94,10 @@ def overview():
         "available_space"   : None,
         "uptime"            : None,
         "temperature_cpu"   : None,
-        "temperature_ext"   : None,
-        "battery_volt"      : None,
-        "battery_perc"      : None, 
-        "controller_version": None,
+        # "temperature_ext"   : None,
+        # "battery_volt"      : None,
+        # "battery_perc"      : None, 
+        # "controller_version": None,
     }
 
     total, used, free = shutil.disk_usage("/")
@@ -117,6 +117,19 @@ def overview():
 def settings():
 
     data = {}
+
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("config", "config.py")
+    conf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(conf)
+    conf_dict = vars(conf)
+
+    for key in conf_dict.keys():
+
+        if key.startswith("__") and key.endswith("__"):
+            continue
+
+        data[key] = conf_dict[key]
 
     return render_template("settings.html", data=data)
 
@@ -149,6 +162,10 @@ def stream():
 @app.route("/focus")
 def focus():
     return render_template("focus.html")
+
+@app.route("/preview")
+def preview():
+    return render_template("preview.html")
 
 def process_image_cv2(cameraManager, peak=None, crop=None, resize=None):
 
@@ -210,7 +227,9 @@ def process_image(cameraManager, peak=None, crop=None, resize=None):
             ))
 
         if resize is not None:
-            pass
+            factor = resize / img.size[0]
+            new_size = [img.size[0] * factor, img.size[1] * factor]
+            img.thumbnail(new_size, Image.ANTIALIAS)
 
         imgByteArr = io.BytesIO()
         img.save(imgByteArr, format="JPEG")
@@ -220,11 +239,17 @@ def process_image(cameraManager, peak=None, crop=None, resize=None):
 @app.route("/video_feed")
 def video_feed():
 
-    peak = request.args.get("peak", False)
-    crop = request.args.get("crop", False)
-    resize = request.args.get("resize", False)
+    peak = request.args.get("peak", None)
+    crop = request.args.get("crop", None)
+    resize = request.args.get("resize", None)
 
-    response = make_response(process_image(cameraManager, peak=peak, crop=CROP_SIZE))
+    if crop is not None:
+        crop = CROP_SIZE
+
+    if resize is not None:
+        resize = int(resize)
+
+    response = make_response(process_image(cameraManager, peak=peak, crop=crop, resize=resize))
     response.headers.set("Content-Type", "image/jpeg")
 
     return response
