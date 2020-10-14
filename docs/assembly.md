@@ -188,11 +188,11 @@ Note: 18650 batteries usually have a flat positive pole. So unlike smaller batte
 
 ![battery leads]( {{ site.baseurl }}/assets/{{ page.imgdir }}/battery_leads.jpg ){:.enable_lightbox}
 
-The camera will now start and wait for 10s for user input. If you push the button while the LED is blinking, the camera will start in maintenance mode, create a Wifi network and will wait for further input. If the button is not pressed, camera will start normally and begins capturing.
+The camera will now start and blink white for 10s. During this time the camera is waiting for user input. If you push the button while the LED is blinking white, the LED will start to blink blue and the camera starts in maintenance mode. Maintenance mode means that the camera creates a Wifi network and will wait for further input. If the button is not pressed, the LED will be green for 1 second, the camera starts normally and begins capturing.
 
 ![status led]( {{ site.baseurl }}/assets/{{ page.imgdir }}/led_status.png ){:.enable_lightbox}
 
-After 30 seconds the camera is fully booted and you can connect to the `CompressorCamera` network. The default password is `ccam_password`. Open the <a href="http://compressor.camera">compressor.camera</a> website and click on focus in the sidebar (this will only work when you are connected to the camera network). What you will see now is a 100% crop of the center of the camera image. Click on the image to let the camera take a new picture (this may take a few seconds). Based on this crop you can rotate the ring that holds the lens to adjust the backfocus of the lens. The image will be extremly blurry in the start since the Camera Module is shipped with the backfocus ring fully screwed in. You may need to rotate the ring for 1 or 2 full revolutions till the camera output resembles an actual image. Refresh by clicking on the image, rotate the ring a bit, refresh again, ... 
+After 30 seconds the camera is fully booted and you can connect to the `CompressorCamera` network. When the camera is starting for the very first time, this may take slightly longer. As soon as the LED is stopping to blink, the wifi network is available. The default password is `ccam_password`. Open the <a href="http://compressor.camera">compressor.camera</a> website and click on focus in the sidebar (this will only work when you are connected to the camera network). What you will see now is a 100% crop of the center of the camera image. Click on the image to let the camera take a new picture (this may take a few seconds). Based on this crop you can rotate the ring that holds the lens to adjust the backfocus of the lens. The image will be extremly blurry in the start since the Camera Module is shipped with the backfocus ring fully screwed in. You may need to rotate the ring for 1 or 2 full revolutions till the camera output resembles an actual image. Refresh by clicking on the image, rotate the ring a bit, refresh again, ... 
 
 ![webinterface screenshot]( {{ site.baseurl }}/assets/{{ page.imgdir }}/webinterface_screenshot.png ){:.enable_lightbox}
 
@@ -271,7 +271,9 @@ Lumos is what I use and recommend, since it's simple and does it's job exception
 
 TODO PI ACT LED
 
-After a day or two, grab your camera again and open the enclosure. Make sure that the LED (see image) is not on before moving the switch to off and remove the SD-card.
+![Pi ACT LED]( {{ site.baseurl }}/assets/{{ page.imgdir }}/pi_act_led.jpg ){:.enable_lightbox}
+
+After a day or two, grab your camera again and open the enclosure. Make sure that the LED of the Pi Zero (see image) is not on before moving the switch to off and remove the SD-card.
 
 If you use Windows or MacOS, the SD-card will show two partitions. One rather small one which you can ignore and a second one called CCSTORAGE. If you are using Linux, you will see a third ext4-formatted partition which contains the operating system, but you can ignore that.
 
