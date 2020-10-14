@@ -40,9 +40,13 @@ Avoid the color black, PETG temperatures after a few hours in the sun:
 
 ## Circuit Boards:
 
+Revision J:
+
+  * no changes
+
 Revision I:
 
-  * new DCDC converter chip (TPS630701) allows 3-16V input (revH only supported 6-12V)
+  * new DCDC converter chip (TPS630701) allows 3-13V input (revH only supported 6-12V)
   * board can now be powered via MicroUSB as well 
 
 Revision H:
