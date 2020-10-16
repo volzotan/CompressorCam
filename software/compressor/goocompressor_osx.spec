@@ -11,12 +11,11 @@ block_cipher = None
 binaries = []
 
 # import site
-
 # typelib_path = "/usr/local/lib/girepository-1.0/"
 # binaries=[(os.path.join(typelib_path, tl), 'gi_typelibs') for tl in os.listdir(typelib_path)]
 
 a = Analysis(['goocompressor.py'],
-             pathex=['/Users/volzotan/GIT/compressor'],
+             pathex=['/Users/volzotan/GIT/CompressorCam/software/compressor'],
              binaries=[],
              datas=[],
              hiddenimports=[],

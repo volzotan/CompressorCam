@@ -64,8 +64,6 @@ except ImportError as e:
     log.error("Importing cv2 failed. No TIFF support")
     TIFF_SUPPORT = False
 
-import tifffile as tiff
-
 
 class Stopwatch(object):
 
@@ -313,7 +311,7 @@ class Stack(object):
                 self.log.warning("compressor version not available. Error: {}".format(str(e)))
                 if VERSION_NUMBER is None:
                     info["version"] = "not-available"
-                else
+                else:
                     info["version"] = "{:5.2f}".format(VERSION_NUMBER)
 
             # compressing date
@@ -530,7 +528,7 @@ class Stack(object):
 
             if not TIFF_SUPPORT:
                 log.error("No TIFF support (openCV not found). Exit.")
-                exit(-1)
+                sys.exit(-1)
 
             return cv2.imread(image_path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH) 
             # return tiff.imread(image_path)
