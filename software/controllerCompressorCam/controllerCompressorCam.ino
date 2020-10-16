@@ -7,7 +7,7 @@
 #include "global.h"
 #include "constants.h"
 
-#define DEBUG
+// #define DEBUG
 // #define WAIT_ON_BOOT_FOR_SERIAL
 
 #define SHUTDOWN_ON_LOW_BATTERY
@@ -25,8 +25,8 @@
 #endif
 
 // #include "settings_revG.h"
-// #include "settings_revH.h"
-#include "settings_revI.h"
+#include "settings_revH.h"
+// #include "settings_revI.h"
 
 // ---------------------------
 
@@ -96,6 +96,7 @@ void setup() {
     initPins();
 
     pixels.begin();
+    pixels.clear();
 
     #ifdef WAIT_ON_BOOT_FOR_SERIAL
         while (!SerialUSB) {;}
@@ -120,7 +121,6 @@ void setup() {
     }
 
     #ifdef DEBUG
-        pixels.clear();
 
         for (int i=0; i<50; i++) {
             SerialUSB.print(".");
@@ -302,14 +302,7 @@ void loop() {
 
             if (!checkBattHealth()) {
                 #ifdef SHUTDOWN_ON_LOW_BATTERY
-
                     stopAndShutdown();
-
-                    // #ifndef DEBUG
-                    //     stopAndShutdown();
-                    // #else
-                    //     DEBUG_PRINT("stopping aborted (DEBUG mode on)");
-                    // #endif
                 #else
                     DEBUG_PRINT("stopping aborted (no SHUTDOWN_ON_LOW_BATTERY)");
             #endif
@@ -320,6 +313,11 @@ void loop() {
             trigger_done += 1;
             DEBUG_PRINT("trigger active [TRIGGER_START -> TRIGGER_WAIT]");
             state = STATE_TRIGGER_WAIT;
+
+            // blink green once
+            led(0, 10, 0);
+            delay(500);
+            led(0, 0, 0);
 
             break;
         }
@@ -381,6 +379,7 @@ void stopAndShutdown() {
         delay(100);
     }
 
+    pixels.clear();
     pixels.show();
 
     while(true) {
