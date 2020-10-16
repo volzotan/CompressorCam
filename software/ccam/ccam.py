@@ -547,8 +547,6 @@ if __name__ == "__main__":
                 if status == CompressorCameraController.STATE_STREAM:
 
                     log.info("entering stream mode")
-
-                    controller.set_led(0, 0, 10)
                     
                     # subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
                     # subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
@@ -565,9 +563,16 @@ if __name__ == "__main__":
                         sleep(3)
                         exit(0)
 
-                    subprocess.run(["ifup", "wlan0"], check=True)
+                    proc = subprocess.run(["ifup", "wlan0"], check=True, capture_output=True)
+                    log.debug(proc)
+
+                    # it takes a few seconds till the interface is available
+                    # otherwise gunicorn will refuse to start
+                    sleep(5)
+
+                    controller.set_led(0, 0, 10)
         
-                    pid = subprocess.Popen(["sh", "start_server.sh"], close_fds=True)
+                    pid = subprocess.Popen(["sh", "start_server.sh"]) #, close_fds=True)
 
                     log.debug("logging shutdown")
                     logging.shutdown()

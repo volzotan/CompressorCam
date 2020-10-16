@@ -27,44 +27,62 @@ CMD_STREAM_STOP     = "stream_stop"
 CMD_FOCUS_START     = "focus_start"
 CMD_FOCUS_STOP      = "focus_stop"
 
+LOCK_TIMEOUT        = 5
+
 app = Flask(__name__)
+
+lock = threading.Lock()
 
 class CameraManager(object):
 
     def __init__(self, **kwargs):
 
-        self.camera = picamera.PiCamera(sensor_mode=3) 
+        self.error = None
 
-        self.camera.exposure_mode = "verylong"
-        self.camera.meter_mode = "average"
+        try:
 
-        self.stream = io.BytesIO()
+            self.camera = picamera.PiCamera(sensor_mode=3) 
 
-        resolutions = {}
-        resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
-        resolutions["V2"] = [[3280, 2464], Fraction(1, 2)]
-        resolutions["V1"] = [[2592, 1944], Fraction(1, 2)]
+            self.camera.exposure_mode = "verylong"
+            self.camera.meter_mode = "average"
 
-        for key in resolutions.keys():
-            try:
-                self.camera.resolution = resolutions[key][0]
-                self.camera.framerate = resolutions[key][1]
-                break
-            except picamera.exc.PiCameraValueError as e:
-                pass
+            self.stream = io.BytesIO()
 
-        for (arg, value) in kwargs.items():
-            setattr(self.camera, arg, value)
+            resolutions = {}
+            resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
+            resolutions["V2"] = [[3280, 2464], Fraction(1, 2)]
+            resolutions["V1"] = [[2592, 1944], Fraction(1, 2)]
 
-        self.camera.start_preview()
+            for key in resolutions.keys():
+                try:
+                    self.camera.resolution = resolutions[key][0]
+                    self.camera.framerate = resolutions[key][1]
+                    break
+                except picamera.exc.PiCameraValueError as e:
+                    pass
+
+            for (arg, value) in kwargs.items():
+                setattr(self.camera, arg, value)
+
+            self.camera.start_preview()
+
+        except Exception as e:
+            print("initializing camera failed: {}".format(e))
+            self.error = e
 
     def capture_array(self):
+
+        if self.error is not None:
+            raise e
 
         self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
         self.camera.capture(self.rawCapture, format="bgr")
         return self.rawCapture.array
 
     def capture(self):
+
+        if self.error is not None:
+            raise e
         
         self.stream.seek(0)
         self.stream.truncate()
@@ -78,7 +96,11 @@ class CameraManager(object):
         return image
 
     def stop(self):
+        if self.camera is None:
+            return
+
         self.camera.close()
+        self.camera = None
 
 
 @app.route("/")
@@ -94,6 +116,7 @@ def overview():
         "available_space"   : None,
         "uptime"            : None,
         "temperature_cpu"   : None,
+        # "camera_status"     : "connected"
         # "temperature_ext"   : None,
         # "battery_volt"      : None,
         # "battery_perc"      : None, 
@@ -105,6 +128,9 @@ def overview():
     data["available_space"] = "{:5.2f} GB".format(free / (2**30))
 
     data["uptime"] = "{:7.0f}s".format(time.time() - psutil.boot_time())
+
+    # if cameraManager.error is not None:
+    #     data["camera_status"] = "failure (probably not connected)"
 
     temp_str = str(subprocess.check_output(["vcgencmd", "measure_temp"]))
     temp = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
@@ -208,9 +234,15 @@ def process_image_cv2(cameraManager, peak=None, crop=None, resize=None):
         return bytearray(encodedImage)
 
 
-def process_image(cameraManager, peak=None, crop=None, resize=None):
+def process_image(peak=None, crop=None, resize=None):
 
-    with lock:
+    cameraManager = None
+
+    try:
+
+        lock.acquire(timeout=LOCK_TIMEOUT)
+
+        cameraManager = CameraManager()
 
         if cameraManager is None:
             cameraManager = CameraManager()
@@ -236,6 +268,15 @@ def process_image(cameraManager, peak=None, crop=None, resize=None):
         imgByteArr = imgByteArr.getvalue()
         return bytearray(imgByteArr)
 
+    except Exception as e:
+        print("processing failed: {}".format(e))
+
+    finally:
+        if cameraManager is not None:
+            cameraManager.stop()
+
+        lock.release()
+
 @app.route("/video_feed")
 def video_feed():
 
@@ -249,15 +290,12 @@ def video_feed():
     if resize is not None:
         resize = int(resize)
 
-    response = make_response(process_image(cameraManager, peak=peak, crop=crop, resize=resize))
+    response = make_response(process_image(peak=peak, crop=crop, resize=resize))
     response.headers.set("Content-Type", "image/jpeg")
 
     return response
 
-cameraManager = CameraManager()
-lock = threading.Lock()
+# if __name__ == '__main__':
 
-if __name__ == '__main__':
-
-    app.run(host="0.0.0.0", port=5000, debug=True,
-        threaded=True, use_reloader=False)
+#     app.run(host="0.0.0.0", port=5000, debug=True,
+#         threaded=True, use_reloader=False)
