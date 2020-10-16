@@ -23,6 +23,7 @@ Avoid the color black, PETG temperatures after a few hours in the sun:
 |   8   |   Heat-Insert |   M2.5 D4.2 L5    |   Insert Lens Holder  |   
 |   4   |   Heat-Insert |   M3 D4.2 L3  |   Insert Top  |   
 |   8   |   Heat-Insert |   M3 D4.2 L7  |   Insert Bottom   |   
+|   4   |   DIN934  |   M2.5 |   Nut Camera Module  |    
 |   1   |   DIN934  |   1/4"-20 |   Tripod-Nut  |   
 |   162g    |   PETG    |   Filament    |   Top&Bottom  |   
 |   25g |   PETG    |   Filament    |   Everything Else |   
@@ -34,7 +35,8 @@ Avoid the color black, PETG temperatures after a few hours in the sun:
 |   1   |       |   CompressorCam board |       |   
 |   1   |       |   Pi Zero camera cable short  |       |   
 |   1   |       |   Raspberry Pi Zero W |       |   
-|   1   |       |   Raspberry Pi Camera Module HQ   |       |   
+|   1   |       |   Raspberry Pi Camera Module HQ   |       |  
+|   1   |       |   C or CS-Mount lens  |       |   
 
 # Change Log: 
 
@@ -46,7 +48,7 @@ Revision J:
 
 Revision I:
 
-  * new DCDC converter chip (TPS630701) allows 3-13V input (revH only supported 6-12V)
+  * new DCDC converter chip (TPS630701) allows 3-13V input (revH only supported 6-13V)
   * board can now be powered via MicroUSB as well 
 
 Revision H:
