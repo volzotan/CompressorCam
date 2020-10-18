@@ -15,7 +15,11 @@ import yaml
 
 import logging as log
 
+from multiprocessing import freeze_support
+
+
 VERSION = 1.00
+
 
 def blockstring_to_string(s):
 
@@ -360,4 +364,8 @@ def main():
     stack.run(input_images_stack)
 
 if __name__ == "__main__":
+
+    # fix: https://github.com/pyinstaller/pyinstaller/issues/3907
+    freeze_support()
+
     main()
