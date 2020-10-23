@@ -500,6 +500,9 @@ if __name__ == "__main__":
             status = controller.ping()
             try:
                 status = int(status)
+
+                # status may be None with older controller firmware versions
+
                 if status == CompressorCameraController.STATE_STREAM:
 
                     log.info("entering stream mode")
@@ -612,27 +615,6 @@ if __name__ == "__main__":
     try:
         if image_info is not None and len(image_info) > 0:
 
-            # option A:
-
-            # brightness = image_info[0][1]
-
-            # if ND_FILTER is not None:
-            #     brightness += ND_FILTER
-
-            # # take images slower
-
-            # if brightness <= REDUCE_INTERVAL_EV_THRESHOLD:
-            #     log.debug("request interval reduction (EV: {:.2f} < {})".format(
-            #         brightness, REDUCE_INTERVAL_EV_THRESHOLD))
-            #     controller.reduce_interval()
-
-            # # take images faster
-
-            # if brightness > INCREASE_INTERVAL_EV_THRESHOLD:
-            #     log.debug("request interval increase (EV: {:.2f} > {})".format(
-            #         brightness, INCREASE_INTERVAL_EV_THRESHOLD))
-            #     controller.increase_interval()
-
             # option B:
 
             if CHECK_FOR_INTERVAL_REDUCE:
@@ -652,22 +634,6 @@ if __name__ == "__main__":
                 brightness_2 = future_brightness_2.result(timeout=8)
 
                 log.info("brightness of capture_2 : {:8.6f}".format(brightness_2))
-
-            # option C:
-
-            # filename_capture_2 = image_info[1][0]
-            # image = Image.open(filename_capture_2)
-            # min_value, max_value = image.getextrema()
-
-            # if max_value is not None and max_value >= 100:
-
-            #     # take images faster
-
-            #     log.debug("request interval increase (max value: {:.2f} > {})".format(
-            #         max_value, 100))
-            #     controller.increase_interval()
-
-            # pass
 
     except Exception as e:
         log.error("increasing/reducing interval failed: {}".format(e))

@@ -313,6 +313,8 @@ class CompressorCameraController(Controller):
 
             if len(response) > 1:
                 return response[2:]
+            else: 
+                return None
 
         except serial.serialutil.SerialException as se:
             log.error("comm failed, SerialException: {}".format(se))
