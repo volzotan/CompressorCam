@@ -16,6 +16,7 @@ from PIL import Image
 from fractions import Fraction
 
 CROP_SIZE = [1280, 720]
+BASE_DIR = "/media/storage"
 
 IMAGE_DIR = "/media/storage"
 
@@ -123,18 +124,24 @@ def overview():
         # "controller_version": None,
     }
 
-    total, used, free = shutil.disk_usage("/")
-    data["total_space"] = "{:5.2f} GB".format(total / (2**30))
-    data["available_space"] = "{:5.2f} GB".format(free / (2**30))
+    try:
+        total, used, free = shutil.disk_usage(BASE_DIR)
+        data["total_space"] = "{:5.2f} GB".format(total / (2**30))
+        data["available_space"] = "{:5.2f} GB".format(free / (2**30))
+    except Exception as e:
+        print("getting disk space failed: {}".format(e))
 
     data["uptime"] = "{:7.0f}s".format(time.time() - psutil.boot_time())
 
     # if cameraManager.error is not None:
     #     data["camera_status"] = "failure (probably not connected)"
 
-    temp_str = str(subprocess.check_output(["vcgencmd", "measure_temp"]))
-    temp = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
-    data["temperature_cpu"] = temp
+    try:
+        temp_str = str(subprocess.check_output(["vcgencmd", "measure_temp"]))
+        temp = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
+        data["temperature_cpu"] = temp
+    except Exception as e:
+        print("reading temperature failed: {}".format(e))
 
     return render_template("overview.html", data=data)
 
