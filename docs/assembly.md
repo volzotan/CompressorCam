@@ -184,7 +184,7 @@ In order to do that, we need to use the blue screwdriver that came with the Came
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/225.jpg ){:.enable_lightbox}
 
 Put the fully charged batteries in the battery holder (mind the orientation!) and push the power switch to ON. 
-Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional 
+Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional note on how to orient them. 
 
 ![battery leads]( {{ site.baseurl }}/assets/{{ page.imgdir }}/battery_leads.jpg ){:.enable_lightbox}
 
@@ -268,8 +268,6 @@ When scouting locations it is advisable to get an understanding where the sun wi
 Lumos is what I use and recommend, since it's simple and does it's job exceptionally well.
 
 ### <a name="copy"></a>Copy the data
-
-TODO PI ACT LED
 
 ![Pi ACT LED]( {{ site.baseurl }}/assets/{{ page.imgdir }}/pi_act_led.jpg ){:.enable_lightbox}
 
