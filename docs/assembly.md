@@ -180,15 +180,22 @@ Some C/CS-lenses are fixed focus lenses, some offer an additional focus adjustme
 
 In order to do that, we need to use the blue screwdriver that came with the Camera Module and loosen the backfocus adjustment screw. Push the screwdriver through the hole (as seen in the image) and rotate it slightly till you feel that the screwdriver is actually engaging the screw (is that the correct phrase in english? whatever, you know what I mean...). Loosen the screw a bit and then you are able to rotate the ring the lens sits on (it's lubricated in a way that increases resistance so don't be surprised if it takes a bit of force).
 
+![battery leads]( {{ site.baseurl }}/assets/{{ page.imgdir }}/battery_leads.jpg ){:.enable_lightbox}
+
+Put the fully charged batteries in the battery holder (mind the orientation!).
+
+Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional note on how to orient them. 
+
+If the batteries are inserted push the power switch to ON (green circle in the picture below).
+
+![led types]( {{ site.baseurl }}/assets/{{ page.imgdir }}/224_2.jpg ){:.enable_lightbox}
+
+The LED on the CompressorCamera board (blue ring) will now start and blink white for 10s. During this time the camera is waiting for user input.
+
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/224.jpg ){:.enable_lightbox}
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/225.jpg ){:.enable_lightbox}
 
-Put the fully charged batteries in the battery holder (mind the orientation!) and push the power switch to ON. 
-Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional note on how to orient them. 
-
-![battery leads]( {{ site.baseurl }}/assets/{{ page.imgdir }}/battery_leads.jpg ){:.enable_lightbox}
-
-The camera will now start and blink white for 10s. During this time the camera is waiting for user input. If you push the button while the LED is blinking white, the LED will start to blink blue and the camera starts in maintenance mode. Maintenance mode means that the camera creates a Wifi network and will wait for further input. If the button is not pressed, the LED will be green for 1 second, the camera starts normally and begins capturing.
+ If you push the button while the LED is blinking white, the LED will start to blink blue and the camera starts in maintenance mode. Maintenance mode means that the camera creates a Wifi network and will wait for further input. If the button is not pressed, the LED will be green for 1 second, the camera starts normally and begins capturing (the Pi Zero LED shown by the yellow ring in the picture will begin to flicker).
 
 ![status led]( {{ site.baseurl }}/assets/{{ page.imgdir }}/led_status.png ){:.enable_lightbox}
 
