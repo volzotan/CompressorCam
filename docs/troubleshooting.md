@@ -2,7 +2,7 @@
 title: Troubleshooting Guide
 imgdir: troubleshooting
 assemblyimgdir: assembly
-permalink: troubleshooting
+permalink: troubleshooting/
 ---
 
 ### When starting in maintenance mode the LED keeps blinking blue

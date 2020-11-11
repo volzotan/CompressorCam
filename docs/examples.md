@@ -1,6 +1,7 @@
 ---
 title: Example Images
 imgdir: examples
+permalink: examples/
 ---
 
 ![Weimar Marktplatz]( {{ site.baseurl }}/assets/{{ page.imgdir }}/marktplatz.jpg ){:.enable_lightbox}

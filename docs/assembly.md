@@ -1,7 +1,7 @@
 ---
 title: Assembly
 imgdir: assembly
-permalink: assembly
+permalink: assembly/
 ---
 
 Steps:
