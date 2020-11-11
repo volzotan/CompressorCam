@@ -15,7 +15,7 @@ Steps:
   * [Copy the Data](#copy)
   * [Postprocessing](#postprocessing)
 
-One word of caution though: This is a very low volume DIY kit of 3D-printed parts, not industrial-grade perfect consumer goods. However, I did my best to make assembly as easy and reliable as possible, if you encounter issues, <a href="mailto:solargraphy@volzo.de?subject=assembly%20problems">let me know</a> and I help you out.
+One word of caution though: This is a very low volume DIY kit of 3D-printed parts, not industrial-grade perfect consumer goods. However, I did my best to make assembly as easy and reliable as possible, if you encounter issues, have a look at the <a href="{{ site.baseurl }}/troubleshooting/">troubleshooting guide</a> or <a href="mailto:solargraphy@volzo.de?subject=assembly%20problems">let me know</a> and I help you out.
 
 ### <a name="materials"></a>Materials
 
@@ -46,7 +46,7 @@ Whats you need to buy separately:
 
 See the [buyers guide]({% link buyersguide.md %}) for recommendations.
 
-Please make sure that everything is present and looks fine.
+Please make sure that everything is present and looks fine. Some plastic parts in your box may differ slightly from what is shown in the images, from time to time I am improving things a bit.
 
 ### <a name="disassembly"></a>Disassemble the Camera Module
 
@@ -268,7 +268,7 @@ When placing the insert with the camera and the battery holder in the enclosure,
 
 ![]( {{ site.baseurl }}/assets/{{ page.imgdir }}/323.jpg ){:.enable_lightbox}
 
-Use the last four screws (50mm long) to close the enclosure. Only the last 4mm of the screw are engaging with the thread in the lower part of the enclosure. So place every screw in the hole and press the upper part of the enclosure a bit down. Then fasten one screw a bit, move on to the next one diagonally and fasten that a bit, too. Then you can fasten all four screws completely till both halves are flush. The screws need to compress the seal in between but if upper and lower half touch, the seal is tight.
+Use the last four screws (these are either 50mm long or 60mm long, depending on the type of enclosure you've got) to close the enclosure. Only the last 4mm of the screw are engaging with the thread in the lower part of the enclosure. So place every screw in the hole and press the upper part of the enclosure a bit down. Then fasten one screw a bit, move on to the next one diagonally and fasten that a bit, too. Then you can fasten all four screws completely till both halves are flush. The screws need to compress the seal in between but if upper and lower half touch, the seal is tight.
 
 ### <a name="take"></a>Take images
 
