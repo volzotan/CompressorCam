@@ -101,7 +101,9 @@ Put a nut in each of the four holes shown in the photo. Often using the screwdri
 
 Push the metal ring of the camera module through the plastic (take care, that might be a tight fit) and screw it down using four 12mm long screws. (2mm Allen key needed).
 
-That's it, first part is done.
+Double check if you did insert the camera module in the right orientation (cable should be facing away from the cavity as shown in the picture above).
+
+That's it, first part is done. 
 
 ### <a name="join"></a>Join the Camera Module and the Electronics
 
@@ -127,6 +129,7 @@ The smaller half of the cable may show exposed metal on both sides. If this is t
 ![Pi Zero camera assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/205.jpg ){:.enable_lightbox}
 
 Now place the CompressorCamera board on top of the Camera Module (orientation as shown in the image).
+Depending on your hardware version, the white markings on the bottom of the circuit board may look different.
 
 ![Pi Zero camera assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/2051.jpg ){:.enable_lightbox}
 ![Pi Zero camera assembly]( {{ site.baseurl }}/assets/{{ page.imgdir }}/2052.jpg ){:.enable_lightbox}
@@ -186,16 +189,18 @@ Put the fully charged batteries in the battery holder (mind the orientation!).
 
 Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional note on how to orient them. 
 
-If the batteries are inserted push the power switch to ON (green circle in the picture below).
+If the batteries are inserted push the on/off-switch to ON (marked with (a) in the picture below).
 
-![led types]( {{ site.baseurl }}/assets/{{ page.imgdir }}/224_2.jpg ){:.enable_lightbox}
+![led types]( {{ site.baseurl }}/assets/{{ page.imgdir }}/button_explanations.png ){:.enable_lightbox}
 
-The LED on the CompressorCamera board (blue ring) will now start and blink white for 10s. During this time the camera is waiting for user input.
+The status LED (b) on the CompressorCamera board will now start and blink white for 10s. During this time the camera is waiting for user input.
 
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/224.jpg ){:.enable_lightbox}
 ![streaming mode]( {{ site.baseurl }}/assets/{{ page.imgdir }}/225.jpg ){:.enable_lightbox}
 
- If you push the button while the LED is blinking white, the LED will start to blink blue and the camera starts in maintenance mode. Maintenance mode means that the camera creates a Wifi network and will wait for further input. If the button is not pressed, the LED will be green for 1 second, the camera starts normally and begins capturing (the Pi Zero LED shown by the yellow ring in the picture will begin to flicker).
+ If you push the button (c) while the LED is blinking white, the status LED (b) will start to blink blue and the camera starts in maintenance mode. Maintenance mode means that the camera creates a Wifi network and will wait for further input. If the button is not pressed, the LED (b) will be green for 1 second, the camera starts normally and begins capturing (the Pi Zero LED (d) will begin to flicker).
+
+ (if your camera did already start in regular mode and is now happily taking pictures, move the on/off-switch to the right to power of the camera, move it to the left to power it on again and then press the button to start in maintenance mode)
 
 ![status led]( {{ site.baseurl }}/assets/{{ page.imgdir }}/led_status.png ){:.enable_lightbox}
 
@@ -203,7 +208,7 @@ After 30 seconds the camera is fully booted and you can connect to the `Compress
 
 ![webinterface screenshot]( {{ site.baseurl }}/assets/{{ page.imgdir }}/webinterface_screenshot.png ){:.enable_lightbox}
 
-If you face your camera to your ceiling and you got a [very classic german wallpaper texture](https://en.wikipedia.org/wiki/Ingrain_wallpaper), then it would look like the image above.
+If you point your camera to your ceiling and you got a [very classic german wallpaper texture](https://en.wikipedia.org/wiki/Ingrain_wallpaper), then it would look like the image above.
 
 If you did find the best focus position and your camera output is nice and sharp, fasten the screw with the blue screwdriver. The lens is now secured and focussed and you are not able to rotate the backfocus ring any further. You can switch the camera off with the power switch on the board.
 
