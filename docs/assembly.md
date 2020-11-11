@@ -189,7 +189,7 @@ Put the fully charged batteries in the battery holder (mind the orientation!).
 
 Note: 18650 batteries usually have a flat positive pole. So unlike smaller batteries the plus side is less pronounced. You can always differentiate the sides by knowing that the negative side is completely flat while the positive side looks different. The negative side needs to be placed on the spring in the holder. Molded into the plastic of the holder you will find an additional note on how to orient them. 
 
-If the batteries are inserted push the on/off-switch to ON (marked with (a) in the picture below).
+If the batteries are inserted push the on/off-switch to ON (marked with (a) in the picture below, should usually be already set to on because I am testing each board before packaging).
 
 ![led types]( {{ site.baseurl }}/assets/{{ page.imgdir }}/button_explanations.png ){:.enable_lightbox}
 
@@ -204,7 +204,7 @@ The status LED (b) on the CompressorCamera board will now start and blink white 
 
 ![status led]( {{ site.baseurl }}/assets/{{ page.imgdir }}/led_status.png ){:.enable_lightbox}
 
-After 30 seconds the camera is fully booted and you can connect to the `CompressorCamera` network. When the camera is starting for the very first time, this may take slightly longer. As soon as the LED is stopping to blink, the wifi network is available. The default password is `ccampassword`. Open the <a href="http://compressor.camera">compressor.camera</a> website and click on focus in the sidebar (this will only work when you are connected to the camera network). What you will see now is a 100% crop of the center of the camera image. Click on the image to let the camera take a new picture (this may take a few seconds). Based on this crop you can rotate the ring that holds the lens to adjust the backfocus of the lens. The image will be extremly blurry in the start since the Camera Module is shipped with the backfocus ring fully screwed in. You may need to rotate the ring for 1 or 2 full revolutions till the camera output resembles an actual image. Refresh by clicking on the image, rotate the ring a bit, refresh again, ... 
+After 30 seconds the camera is fully booted and will provide a Wifi-hotspot. You can connect with your computer to the `CompressorCamera` Wifi-network now. When the camera is starting for the very first time, this may take slightly longer. As soon as the status LED is stopping to blink, the wifi network is available. The default password is `ccampassword`. Open the <a href="http://compressor.camera">compressor.camera</a> website and click on focus in the sidebar (this will only work when you are connected to the CompressorCamera network). What you will see now is a 100% crop of the center of the camera image. Click on the image to let the camera take a new picture (this may take a few seconds). Based on this crop you can rotate the ring that holds the lens to adjust the backfocus of the lens. The image will be extremly blurry in the start since the Camera Module is shipped with the backfocus ring fully screwed in. You may need to rotate the ring for 1 or 2 full revolutions till the camera output resembles an actual image. Refresh by clicking on the image, rotate the ring a bit, refresh again, ... 
 
 ![webinterface screenshot]( {{ site.baseurl }}/assets/{{ page.imgdir }}/webinterface_screenshot.png ){:.enable_lightbox}
 
