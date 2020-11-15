@@ -7,7 +7,7 @@ There are a few things you need to have or buy separately to complete the camera
 
   * Raspberry Pi Zero W (without headers)
   * Raspberry Pi Zero HQ camera module
-  * C or CS-Mount Lens (see lens size for more info)
+  * C or CS-Mount Lens (more info below)
   * two 18650 Lithium-Ion batteries (and a charger)
   * metric allen-keys (sizes: 1.5/2/2.5)
   * a tripod or zip ties
@@ -20,7 +20,7 @@ There are three versions of the Raspberry Pi Zero:
   * Zero W has a wifi-module and no headers (empty holes). **That's the one we need.**
 
 Where to buy:  
-You can find a list of [recommended resellers](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) on the Raspberry Pi Foundation homepage.
+You can find a list of [recommended resellers](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) on the Raspberry Pi Foundation homepage. Direct links to the correct model are down below.
 
 ### Raspberry Pi Zero HQ camera module
 
@@ -30,6 +30,8 @@ Where to buy:
 Same shop as the Pi Zero.
 
 ### C-Mount or CS-Mount Lens
+
+The Rasberry Pi Camera Module does support C and CS-Mount lenses. Any non-motorized lens will work as long as it fits the enclosure. The physical length of the lens (not the focal length, but how long the barrel of the lens actually is) should not exceed 35mm. The official 6mm wide-angle sold alongside the Camera Module is quite large but does fit nicely. If you are not sure which lens to buy, the 6mm is not a bad option (it is not very wide-angle, though).
 
 I did a comparison of several wide angle lenses [here](http://volzo.de/posts/raspberry-wide-angle-lenses). I recommend purchasing the unbranded 3.2mm wide angle lens for really wide shots (what you usually want for solargraphy). However, buying the official 6mm lens is not a bad choice either.
 
@@ -67,7 +69,7 @@ Use whatever you have handy. If you want to zip tie the enclosure to a pole, I r
 | Allen key set                   | Pimoroni  | <https://shop.pimoroni.com/products/allen-key-set> |
 | 18650 battery                   | Pimoroni  | <https://shop.pimoroni.com/products/18650-lithium-cell> |
 | 18650 charger                   | Amazon    | <https://www.amazon.co.uk/~/dp/B07DNG1MSQ/> |
-| Lens                            | AliExpress | <https://aliexpress.com/item/32999824737.html> |
+| Lens [3.2mm]                    | AliExpress | <https://aliexpress.com/item/32999824737.html> |
 
 
 ### United States of America
@@ -76,9 +78,13 @@ Use whatever you have handy. If you want to zip tie the enclosure to a pole, I r
 |:--------------------------------|:----------|-------|
 | Raspberry Pi Zero W             | Sparkfun  | <https://www.sparkfun.com/products/14277> |
 | Raspberry Pi Camera Module HQ   | Sparkfun  | <https://www.sparkfun.com/products/16760> |
-| Allen key set<sup>[1](#myfootnote1)</sup>                  | Sparkfun  | <https://www.sparkfun.com/products/14223> |
+| Allen key set<sup>[1](#myfootnote1)</sup> | Sparkfun  | <https://www.sparkfun.com/products/14223> |
 | 18650 battery                   | Sparkfun  | <https://www.sparkfun.com/products/12895> |
 | 18650 charger                   | Amazon    | <https://www.amazon.com/~/dp/B010J9GE5G> |
-| Lens                            | AliExpress | <https://aliexpress.com/item/32999824737.html> |
+| Lens [3.2mm]                    | AliExpress | <https://aliexpress.com/item/32999824737.html> |
 
 <a name="footnote-pay-less">1</a>: There are other places where you may pay significantly less for Allen keys
+
+### Addtional countries?
+
+Let me know.
