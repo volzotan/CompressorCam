@@ -66,8 +66,8 @@ Use whatever you have handy. If you want to zip tie the enclosure to a pole, I r
 | Raspberry Pi Camera Module HQ   | Pimoroni  | <https://shop.pimoroni.com/products/raspberry-pi-high-quality-camera> |
 | Allen key set                   | Pimoroni  | <https://shop.pimoroni.com/products/allen-key-set> |
 | 18650 battery                   | Pimoroni  | <https://shop.pimoroni.com/products/18650-lithium-cell> |
-| 18650 charger                   | Amazon    | <https://www.amazon.co.uk/XTAR-VC2-USB-Battery-Charger/dp/B00Q0UBMC> |
-| Lens                            | AliExpress | <https://de.aliexpress.com/item/32999824737.html> |
+| 18650 charger                   | Amazon    | <https://www.amazon.co.uk/~/dp/B07DNG1MSQ/> |
+| Lens                            | AliExpress | <https://aliexpress.com/item/32999824737.html> |
 
 
 ### United States of America
@@ -78,7 +78,7 @@ Use whatever you have handy. If you want to zip tie the enclosure to a pole, I r
 | Raspberry Pi Camera Module HQ   | Sparkfun  | <https://www.sparkfun.com/products/16760> |
 | Allen key set<sup>[1](#myfootnote1)</sup>                  | Sparkfun  | <https://www.sparkfun.com/products/14223> |
 | 18650 battery                   | Sparkfun  | <https://www.sparkfun.com/products/12895> |
-| 18650 charger                   | Amazon    | <https://www.amazon.com/-/de/dp/B010J9GE5G> |
-| Lens                            | AliExpress | <https://de.aliexpress.com/item/32999824737.html> |
+| 18650 charger                   | Amazon    | <https://www.amazon.com/~/dp/B010J9GE5G> |
+| Lens                            | AliExpress | <https://aliexpress.com/item/32999824737.html> |
 
 <a name="footnote-pay-less">1</a>: There are other places where you may pay significantly less for Allen keys
