@@ -1,6 +1,7 @@
 ---
 title: How it works
 imgdir: howitworks
+permalink: howitworks/
 ---
 
 # Theory

@@ -25,6 +25,11 @@ Make sure that the contacts of the SD-card are facing down, the SD-card is fully
 
 Possible problems:
 
+**The camera is not in maintenance mode**
+
+If the LED is not constantly blue, the camera did not start in maintenance mode.
+Switch of the camera with the on/off-switch and switch it back on. The status LED is blinking white for 10s, during these 10s push the button next to the LED once. The LED will stop blinking white and instead blink blue. After at most 30s the LED should change to a permanent blue and the camera has booted and created a Wifi-network.
+
 **You are not connected to the correct Wifi-network**
 
 Make sure that the camera did start in maintenance mode (LED is constantly blue, not blinking) and you are connected to the ComressorCamera Wifi-network. I recommend to do this with a computer, not a tablet or a phone. Modern Android and iOS versions are not happy about wireless networks that are not connected to the internet and may complain or refuse to connect altogether.
