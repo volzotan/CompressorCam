@@ -2,4 +2,8 @@
 title: Guides
 ---
 
-[foo]({% link guides/software_update.md %})
+[Assembly]({% link assembly.md %})
+
+[Troubleshooting Guide]({% link troubleshooting.md %})
+
+[Software Updates]({% link guides/software_update.md %})
