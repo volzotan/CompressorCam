@@ -18,7 +18,7 @@ import logging as log
 from multiprocessing import freeze_support
 
 
-VERSION = 1.00
+VERSION = "1.0.0"
 
 
 def blockstring_to_string(s):
@@ -149,7 +149,7 @@ gooey_options = {
                                     'menuTitle': 'About',
                                     'name': 'Compressor',
                                     'description': 'Merge images to create digital long exposure photographies',
-                                    'version': '{:5.2f}'.format(VERSION),
+                                    'version': VERSION,
                                     'website': 'https://github.com/volzotan/CompressorCam',
                                     'developer': 'https://digitalsolargraphy.com/'
                                 }]
