@@ -34,6 +34,9 @@ sleep 5
 
 mkdir /media/storage
 
+# in case it may already be mounted
+umount /media/storage
+
 mkfs.vfat -F 32 -n CCSTORAGE /dev/mmcblk0p3
 
 echo "\n\n"
