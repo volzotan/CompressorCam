@@ -32,8 +32,9 @@
 #define ERRORCODE_NOT_AVAILABLE          110
 
 
-// ----------- ERROR CODES -----------
+// ----------- STATES -----------
 
+#define STATE_UPLOAD                     10
 #define STATE_STREAM                     11
 #define STATE_IDLE                       12
 #define STATE_TRIGGER_START              13

@@ -25,8 +25,9 @@
 #endif
 
 // #include "settings_revG.h"
-#include "settings_revH.h"
-// #include "settings_revI.h"
+// #include "settings_revH.h"
+#include "settings_revI.h"
+// #include "settings_revJ.h"
 
 // ---------------------------
 
@@ -40,6 +41,7 @@
 #define TRIGGER_COUNT           10000           // max number of triggers
 
 #define STREAM_MODE_MAX_LIFETIME 5*60*1000
+#define UPLOAD_MODE_MAX_LIFETIME 3*60*1000
 
 // ---------------------------
 
@@ -68,6 +70,7 @@ long serialParam2           = -1;
 
 RTCZero rtc;
 long now = -1;
+long enter_state_time = -1;
 
 Adafruit_NeoPixel pixels(1, PIN_PIXEL, NEO_GRB + NEO_KHZ800);
 uint32_t ledBlinkColor = 0;
@@ -204,6 +207,7 @@ void setup() {
 
         switchZeroOn(true);
         state = STATE_STREAM;
+        enter_state_time = millis();
 
         DEBUG_PRINT("entering stream mode");
         ledBlink(0, 0, 10);
@@ -229,17 +233,30 @@ void loop() {
 
         // do nothing and wait for incoming serial commands
         case STATE_STREAM: {
+            // if (enter_state_time - millis() > STREAM_MODE_MAX_LIFETIME) {
+            //     DEBUG_PRINT("stream mode: max lifetime reached");
+
+            //     // TODO: LED red
+
+            //     stopAndShutdown();
+            // } 
+
+            // delay(100);
+
             break;
+        }
 
-            if (millis() > STREAM_MODE_MAX_LIFETIME) {
-                DEBUG_PRINT("stream mode: max lifetime reached");
+        // do nothing wail waiting for incoming commands or timeout
+        case STATE_UPLOAD: {
+            if (enter_state_time - millis() > UPLOAD_MODE_MAX_LIFETIME) {
+                DEBUG_PRINT("upload mode: max lifetime reached");
 
-                // TODO: LED red
-
-                stopAndShutdown();
+                state = STATE_IDLE;
+                break;
             } 
 
             delay(100);
+            berak;
         }
 
         // do nothing and check if it's time to fire a trigger event
@@ -253,6 +270,7 @@ void loop() {
                 // state = STATE_LOOP;
             }   
 
+            // millis overflow happens after 49 days, so ignore that issue here
             now = getMillis();
 
             // time for new trigger event?
