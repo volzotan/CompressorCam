@@ -13,8 +13,12 @@
 
                 prev.addEventListener("click", function () {
                     console.log("reload");
-                    prev.classList.add("loading");
-                    prev.src = "{{ url_for('video_feed', resize=1280) }}" + "#" + new Date().getTime();
+                    
+                    if (!prev.classList.contains("loading")) {
+                        prev.classList.add("loading");
+                        prev.src = "{{ url_for('video_feed', resize=1280) }}" + "#" + new Date().getTime();
+                    }
+
                 }, false);
             }
         </script>

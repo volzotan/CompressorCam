@@ -9,6 +9,11 @@
 # --log-level debug                           \
 # --timeout 30
 
-gunicorn -b 0.0.0.0:80 fserv.fserver:app    \
---workers=2                                 \
---timeout 30
+# gunicorn -b 0.0.0.0:80 fserv.fserver:app    \
+# --workers=2                                 \
+# --timeout 30
+
+cd fserv
+
+gunicorn -b 0.0.0.0:80 fserver:app          \
+--timeout 60

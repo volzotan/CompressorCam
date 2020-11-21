@@ -1,19 +1,18 @@
 from flask import Flask, Response
 from flask import render_template, redirect, url_for, make_response, request
 
+from flask_cameraManager import CameraManager
+
 import subprocess
-import threading
 import time
-import datetime
 import io
+import datetime
 import shutil
 import psutil
+from datetime import datetime, timedelta
 
-from picamera.array import PiRGBArray
-import picamera
-
-from PIL import Image
-from fractions import Fraction
+import cv2
+import numpy as np
 
 CROP_SIZE = [1280, 720]
 BASE_DIR = "/media/storage"
@@ -28,81 +27,11 @@ CMD_STREAM_STOP     = "stream_stop"
 CMD_FOCUS_START     = "focus_start"
 CMD_FOCUS_STOP      = "focus_stop"
 
-LOCK_TIMEOUT        = 5
+LOCK_TIMEOUT        = 1
 
 app = Flask(__name__)
 
-lock = threading.Lock()
-
-class CameraManager(object):
-
-    def __init__(self, **kwargs):
-
-        self.error = None
-
-        try:
-
-            self.camera = picamera.PiCamera(sensor_mode=3) 
-
-            self.camera.exposure_mode = "verylong"
-            self.camera.meter_mode = "average"
-
-            self.stream = io.BytesIO()
-
-            resolutions = {}
-            resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
-            resolutions["V2"] = [[3280, 2464], Fraction(1, 2)]
-            resolutions["V1"] = [[2592, 1944], Fraction(1, 2)]
-
-            for key in resolutions.keys():
-                try:
-                    self.camera.resolution = resolutions[key][0]
-                    self.camera.framerate = resolutions[key][1]
-                    break
-                except picamera.exc.PiCameraValueError as e:
-                    pass
-
-            for (arg, value) in kwargs.items():
-                setattr(self.camera, arg, value)
-
-            self.camera.start_preview()
-
-        except Exception as e:
-            print("initializing camera failed: {}".format(e))
-            self.error = e
-
-    def capture_array(self):
-
-        if self.error is not None:
-            raise e
-
-        self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
-        self.camera.capture(self.rawCapture, format="bgr")
-        return self.rawCapture.array
-
-    def capture(self):
-
-        if self.error is not None:
-            raise e
-        
-        self.stream.seek(0)
-        self.stream.truncate()
-        
-        self.camera.capture(self.stream, format='jpeg')
-
-        # "Rewind" the stream to the beginning so we can read its content
-        self.stream.seek(0)
-        image = Image.open(self.stream)
-
-        return image
-
-    def stop(self):
-        if self.camera is None:
-            return
-
-        self.camera.close()
-        self.camera = None
-
+cameraManager = CameraManager(app)
 
 @app.route("/")
 def root():
@@ -243,53 +172,101 @@ def process_image_cv2(cameraManager, peak=None, crop=None, resize=None):
 
 def process_image(peak=None, crop=None, resize=None):
 
-    cameraManager = None
+    start = datetime.now()
+    start_step = datetime.now()
+    print("step: process image")
+
+    # cameraManager = None
 
     try:
 
-        lock.acquire(timeout=LOCK_TIMEOUT)
+        success = cameraManager.lock.acquire(timeout=LOCK_TIMEOUT)
+        if not success:
+            raise Exception("timeout when accessing camera lock")
 
-        cameraManager = CameraManager()
+        print("step: lock acquired")
 
-        if cameraManager is None:
-            cameraManager = CameraManager()
-            time.sleep(0.1)
-            img = cameraManager.capture()
-            cameraManager.stop()
-        else:
-            img = cameraManager.capture()
+        # cameraManager = CameraManager()
+
+        # lapsed = (datetime.now() - start).total_seconds()
+        # print("step: camera manager init [{:5.2f}s]".format(lapsed))
+
+        # img = cameraManager.capture()
+        img = cameraManager.capture_array()
+
+        lapsed = (datetime.now() - start).total_seconds()
+        print("step: capture done       [{:5.2f} | {:5.2f} s]".format(
+            (datetime.now() - start_step).total_seconds(), 
+            (datetime.now() - start).total_seconds()))
+        start_step = datetime.now()
 
         if crop is not None:
-            img = img.crop((
-                int(img.size[0]/2 - crop[0]/2), int(img.size[1]/2 - crop[1]/2), 
-                int(img.size[0]/2 + crop[0]/2), int(img.size[1]/2 + crop[1]/2) 
-            ))
+
+            # startx  = int(img.size[0]/2 - crop[0]/2)
+            # starty  = int(img.size[1]/2 - crop[1]/2)
+            # endx    = int(img.size[0]/2 + crop[0]/2)
+            # endy    = int(img.size[1]/2 + crop[1]/2)
+
+            # img = img.crop((
+            #     int(img.size[0]/2 - crop[0]/2), int(img.size[1]/2 - crop[1]/2), 
+            #     int(img.size[0]/2 + crop[0]/2), int(img.size[1]/2 + crop[1]/2) 
+            # ))
+
+            startx  = int(img.shape[1]/2 - crop[0]/2)
+            starty  = int(img.shape[0]/2 - crop[1]/2)
+            endx    = int(img.shape[1]/2 + crop[0]/2)
+            endy    = int(img.shape[0]/2 + crop[1]/2)
+
+            img = img[starty:starty + crop[1], startx:startx + crop[0], :]
+
+            print("step: crop done          [{:5.2f} | {:5.2f} s]".format(
+                (datetime.now() - start_step).total_seconds(), 
+                (datetime.now() - start).total_seconds()))
+            start_step = datetime.now()
 
         if resize is not None:
-            factor = resize / img.size[0]
-            new_size = [img.size[0] * factor, img.size[1] * factor]
-            img.thumbnail(new_size, Image.ANTIALIAS)
 
-        imgByteArr = io.BytesIO()
-        img.save(imgByteArr, format="JPEG")
-        imgByteArr = imgByteArr.getvalue()
+            # factor = resize / img.size[0]
+            # new_size = [img.size[0] * factor, img.size[1] * factor]
+            # img.thumbnail(new_size, Image.ANTIALIAS)
+
+            factor = resize / img.shape[1]
+            new_size = (int(img.shape[1] * factor), int(img.shape[0] * factor))
+
+            img = cv2.resize(img, new_size)
+
+        # imgByteArr = io.BytesIO()
+        # img.save(imgByteArr, format="JPEG")
+        # imgByteArr = imgByteArr.getvalue()
+
+        _, imgByteArr = cv2.imencode(".jpg", img)
+        imgByteArr = imgByteArr.tobytes()
+
+        print("step: conversion done    [{:5.2f} | {:5.2f} s]".format(
+            (datetime.now() - start_step).total_seconds(), 
+            (datetime.now() - start).total_seconds()))
+        start_step = datetime.now()
+
         return bytearray(imgByteArr)
 
     except Exception as e:
-        print("processing failed: {}".format(e))
+        print("processing failed, error: {}".format(e))
 
     finally:
-        if cameraManager is not None:
-            cameraManager.stop()
+        # if cameraManager is not None:
+        #     print("cameraManager release")
+        #     cameraManager.stop()
 
-        lock.release()
+        cameraManager.lock.release()
+        print("step: lock released")
+
 
 @app.route("/video_feed")
 def video_feed():
 
-    peak = request.args.get("peak", None)
-    crop = request.args.get("crop", None)
-    resize = request.args.get("resize", None)
+    peak    = request.args.get("peak", None)
+    crop    = request.args.get("crop", None)
+    resize  = request.args.get("resize", None)
 
     if crop is not None:
         crop = CROP_SIZE
@@ -297,12 +274,17 @@ def video_feed():
     if resize is not None:
         resize = int(resize)
 
-    response = make_response(process_image(peak=peak, crop=crop, resize=resize))
-    response.headers.set("Content-Type", "image/jpeg")
+    img = process_image(peak=peak, crop=crop, resize=resize)
 
-    return response
+    if img is None:
+        # TODO: return 500?
+        return Response(None, status=204, mimetype='image/jpeg')
+    else:
+        response = make_response(img)
+        response.headers.set("Content-Type", "image/jpeg")
+        return response
 
-# if __name__ == '__main__':
+    # return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-#     app.run(host="0.0.0.0", port=5000, debug=True,
-#         threaded=True, use_reloader=False)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=True, threaded=True, use_reloader=False)

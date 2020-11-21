@@ -13,8 +13,11 @@
 
                 prev.addEventListener("click", function () {
                     console.log("reload");
-                    prev.classList.add("loading");
-                    prev.src = "{{ url_for('video_feed', crop='True') }}" + "#" + new Date().getTime();
+
+                    if (!prev.classList.contains("loading")) {
+                        prev.classList.add("loading");
+                        prev.src = "{{ url_for('video_feed', crop='True') }}" + "#" + new Date().getTime();
+                    }
                 }, false);
             }
         </script>
@@ -24,6 +27,6 @@
         <div class="lds-dual-ring"></div>
     </div>
 
-    <span>Click image to reload</span>
+    <span>Click image to reload (takes a few seconds)</span>
 
 {% endblock %}
