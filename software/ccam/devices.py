@@ -126,6 +126,7 @@ class CompressorCameraController(Controller):
 
     CMD_SHUTDOWN        = "S"
 
+    STATE_UPLOAD        = 10
     STATE_STREAM        = 11
 
     SERIAL_BAUDRATE     = 9600

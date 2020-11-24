@@ -19,6 +19,7 @@ import exifread
 import picamera
 
 from devices import CompressorCameraController
+from uploader import RsyncUploader
 
 from PIL import Image
 
@@ -538,6 +539,18 @@ if __name__ == "__main__":
 
                     sleep(1)
                     exit(0)
+
+                elif status == CompressorCameraController.STATE_UPLOAD:
+
+                    try:
+                        uploader = RsyncUploader(
+                            [OUTPUT_DIR_1, OUTPUT_DIR_2, OUTPUT_DIR_3, OUTPUT_DIR_4],
+                            UPLOAD_DIR)
+
+                        uploader.run()
+
+                    except Exception as e:
+                        log.e("failed upload: {}".format(e))
 
             except Exception as e:
                 log.error("parsing controller status failed: {}".format(e))
