@@ -256,7 +256,7 @@ void loop() {
             } 
 
             delay(100);
-            berak;
+            break;
         }
 
         // do nothing and check if it's time to fire a trigger event

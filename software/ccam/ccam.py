@@ -506,7 +506,7 @@ if __name__ == "__main__":
 
                 if status == CompressorCameraController.STATE_STREAM:
 
-                    log.info("entering stream mode")
+                    log.info("entering mode STREAM")
                     
                     # subprocess.run(["sh", "start_stream.sh"], shell=True, check=True)
                     # subprocess.run(["sh", "start_server.sh"], shell=True, check=True)
@@ -541,6 +541,8 @@ if __name__ == "__main__":
                     exit(0)
 
                 elif status == CompressorCameraController.STATE_UPLOAD:
+
+                    log.info("entering mode UPLOAD")
 
                     try:
                         uploader = RsyncUploader(
