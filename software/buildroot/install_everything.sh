@@ -24,20 +24,29 @@ ssh $HOSTNAME 'mkdir /media/storage'
 
 # ------------------------------------------
 
-echo "creating new partition and reboot"
-scp create_fs.sh $HOSTNAME:/root
-scp remount_rw.sh $HOSTNAME:/root
-ssh $HOSTNAME 'sh /root/create_fs.sh'
+# not required anymore: buildroot does already create the partition
 
-echo "sleep 20s"
-sleep 20
+# echo "creating new partition and reboot"
+# scp create_fs.sh $HOSTNAME:/root
+# scp remount_rw.sh $HOSTNAME:/root
+# ssh $HOSTNAME 'sh /root/create_fs.sh'
 
-echo "format new partition"
-# ssh $HOSTNAME 'mke2fs -t ext4 /dev/mmcblk0p3'
-# ssh $HOSTNAME 'mkexfatfs -n CCSTORAGE /dev/mmcblk0p3'
-ssh $HOSTNAME 'mkfs.vfat -F 32 -n CCSTORAGE /dev/mmcblk0p3'
+# echo "sleep 20s"
+# sleep 20
 
-ssh $HOSTNAME 'reboot'
+# echo "format new partition"
+# # ssh $HOSTNAME 'mke2fs -t ext4 /dev/mmcblk0p3'
+# # ssh $HOSTNAME 'mkexfatfs -n CCSTORAGE /dev/mmcblk0p3'
+# ssh $HOSTNAME 'mkfs.vfat -F 32 -n CCSTORAGE /dev/mmcblk0p3'
+
+# ssh $HOSTNAME 'reboot'
+
+# echo "sleep 20s"
+# sleep 20
+
+# ------------------------------------------
+
+ssh $HOSTNAME 'sh /root/resize_fs.sh'
 
 echo "sleep 20s"
 sleep 20
@@ -48,7 +57,7 @@ echo "\n---"
 echo "setting current time and date on the pi"
 sh set_date.sh
 
-# upload_zerobox.sh takes care of RW-remount
+# upload script takes care of RW-remount
 echo "\n---"
 echo "uploading ccam program files"
 sh upload_program_files.sh
