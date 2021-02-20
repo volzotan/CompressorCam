@@ -37,6 +37,9 @@ mkdir /media/storage
 # in case it may already be mounted
 umount /media/storage
 
+# problem: old partition table still loaded so the new file system won't
+# be created at full size
+
 mkfs.vfat -F 32 -n CCSTORAGE /dev/mmcblk0p3
 
 echo "\n\n"
