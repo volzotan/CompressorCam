@@ -38,6 +38,8 @@ SERIAL_PORT                     = "/dev/ttyAMA0"
 
 MIN_FREE_SPACE                  = 300
 
+SEND_BLE_ADVERTISEMENT          = True
+
 # PERSISTENT MODE
 INTERVAL                        = 60 # in sec
 MAX_ITERATIONS                  = 3000

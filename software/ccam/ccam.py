@@ -20,6 +20,7 @@ import picamera
 
 from devices import CompressorCameraController
 from uploader import RsyncUploader
+from bleadvertisement import advertise
 
 from PIL import Image
 
@@ -413,10 +414,13 @@ if __name__ == "__main__":
     # ---------------------------------------------------------------------------------------
 
     # tvservice off
-    try:
-        subprocess.call(["tvservice", "-o"])    
-    except Exception as e:
-        log.info("disabling tvservice error: {}".format(e))
+
+    # calling tvservice freezes in newest buildroot/
+
+    # try:
+    #     subprocess.run(["tvservice", "-o"], timeout=1)    
+    # except Exception as e:
+    #     log.info("disabling tvservice error: {}".format(e))
 
     # ---------------------------------------------------------------------------------------
 
@@ -442,7 +446,7 @@ if __name__ == "__main__":
     log.info("------------------------------------------")
 
     image_info = None
-    pool = ThreadPoolExecutor(2)
+    pool = ThreadPoolExecutor(3)
 
     try:
         controller = CompressorCameraController.find_by_portname(SERIAL_PORT)
@@ -560,6 +564,28 @@ if __name__ == "__main__":
             log.warning("checking for controller actions failed, no controller found")
     except Exception as e:
         log.error("running controller actions failed: {}".format(e))
+
+    # checking if BLE advertisement should be sent
+
+    if SEND_BLE_ADVERTISEMENT:
+
+        # TODO: collect all data for BLE advertisement
+
+        data = {}
+        # data["id"]                   # 4 byte
+        # data["uptime"]               # 4 byte
+        # data["images_taken"]         # 2 byte
+        # data["errors"]               # 2 byte
+        # data["mode"]                 # 1 byte
+        data["free_space"]      = shutil.disk_usage(OUTPUT_DIR_1).total / (1024 * 1024) 
+
+        if controller is not None:     
+            data["temp"]    = controller.get_temperature()            
+            data["battery"] = controller.get_battery_status()
+
+        _ = pool.submit(advertise, (data))
+
+    # all good: check free space and start capturing
 
     try:
         free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
