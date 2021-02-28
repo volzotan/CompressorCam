@@ -153,6 +153,22 @@ def log_capture_info(camera, filename):
     log.info("{:24s}: {} {:4.2f} | {:4.2f}".format("awb", camera.awb_mode, float(awb_gains[0]), float(awb_gains[1])))
 
 
+def get_serial():
+
+    serial = None
+
+    try:
+        f = open('/proc/cpuinfo','r')
+        for line in f:
+            if line[0:6]=='Serial':
+                serial = line[10:26]
+        f.close()
+    except Exception as e:
+        log.warn("reading serial failed: {}".format(e))
+
+    return serial
+
+
 def calculate_brightness(filename):
 
     with Image.open(filename) as image:
@@ -448,6 +464,15 @@ if __name__ == "__main__":
     image_info = None
     pool = ThreadPoolExecutor(3)
 
+    # status data
+    status_images_taken         = None
+    status_free_space_mb        = None
+    status_temp_pi              = None
+    status_temp_controller      = None
+    status_interval_mode        = None
+    status_battery_volt         = None
+    status_battery_perc         = None
+
     try:
         controller = CompressorCameraController.find_by_portname(SERIAL_PORT)
         
@@ -565,36 +590,16 @@ if __name__ == "__main__":
     except Exception as e:
         log.error("running controller actions failed: {}".format(e))
 
-    # checking if BLE advertisement should be sent
-
-    if SEND_BLE_ADVERTISEMENT:
-
-        # TODO: collect all data for BLE advertisement
-
-        data = {}
-        # data["id"]                   # 4 byte
-        # data["uptime"]               # 4 byte
-        # data["images_taken"]         # 2 byte
-        # data["errors"]               # 2 byte
-        # data["mode"]                 # 1 byte
-        data["free_space"]      = shutil.disk_usage(OUTPUT_DIR_1).total / (1024 * 1024) 
-
-        if controller is not None:     
-            data["temp"]    = controller.get_temperature()            
-            data["battery"] = controller.get_battery_status()
-
-        _ = pool.submit(advertise, (data))
-
     # all good: check free space and start capturing
 
     try:
-        free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
-        if free_space_mb < MIN_FREE_SPACE:
-            log.error("NO SPACE LEFT ON DEVICE (directory: {}, free space: {:.2f}, min free space: {:.2f}".format(OUTPUT_DIR_1, free_space_mb, MIN_FREE_SPACE))
+        status_free_space_mb = shutil.disk_usage(OUTPUT_DIR_1).free / (1024 * 1024)
+        if status_free_space_mb < MIN_FREE_SPACE:
+            log.error("NO SPACE LEFT ON DEVICE (directory: {}, free space: {:.2f}, min free space: {:.2f}".format(OUTPUT_DIR_1, status_free_space_mb, MIN_FREE_SPACE))
             # TODO: red LED on controller
             raise Exception("no space left on device")
         else:
-            log.debug("free space in {}: {:.2f}mb".format(OUTPUT_DIR_1, free_space_mb))
+            log.debug("free space in {}: {:.2f}mb".format(OUTPUT_DIR_1, status_free_space_mb))
 
         if args["stream_mode"]:
             preview = StreamPreview()
@@ -626,13 +631,51 @@ if __name__ == "__main__":
     diff = (datetime.now() - start).total_seconds()
     log.debug("sync done. took         : {:.3f} sec".format(diff))
 
-    temp = None
     try: 
         temp_str = str(subprocess.check_output(["vcgencmd", "measure_temp"]))
-        temp = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
+        status_temp_pi = float(temp_str[temp_str.index("=")+1:temp_str.index("'")])
     except Exception as e:
         log.warn("reading pi temperature failed: {}".format(e))
-    log.info("temperature [pi]        : {:.2f}".format(temp))
+    log.info("temperature [pi]        : {:.2f}".format(status_temp_pi))
+
+    # checking if BLE advertisement should be sent
+
+    if SEND_BLE_ADVERTISEMENT:
+
+        data = {}
+
+        data["id"] = get_serial()
+        # get last 8 chars (is equal to 4 bytes)
+        if data["id"] is not None and len(data["id"]) > 8:
+            data["id"] = bytes.fromhex(data["id"][-8:])
+
+        data["uptime"] = datetime.now().timestamp()
+
+        _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
+        data["images_taken"] = int(filename_iteration)
+
+        data["errors"] = 2  # 2 byte # TODO
+        data["mode"] = 0    # 1 byte # TODO
+
+        data["free_space"] = status_free_space_mb
+
+        data["temp"] = -127
+        if controller is not None:
+            if status_temp_controller is None:     
+                status_temp_controller = float(controller.get_temperature())
+              
+            data["temp"] = int(status_temp_controller)
+
+        data["battery"] = -127
+        if controller is not None:
+            if status_battery_perc is None:  
+                status_battery_perc = controller.get_battery_status()
+        
+            data["battery"] = status_battery_perc
+
+        # _ = pool.submit(advertise, (data))
+        advertise(data)
+
 
     # get EV of last (primary) image and reduce if brighter than threshold
     # 
@@ -704,7 +747,9 @@ if __name__ == "__main__":
         if controller is not None:
             try:
 
-                log.info("battery                 : {}".format(controller.get_battery_status()))
+                status_battery_perc = controller.get_battery_status()
+
+                log.info("battery                 : {}".format(status_battery_perc))
                 # log.info("temperature [controller]: {}".format(controller.get_temperature()))
                 log.info("debug register          : {}".format(controller.get_debug_register()))
                 log.info("next invocation         : {}".format(controller.get_next_invocation()))
@@ -717,6 +762,8 @@ if __name__ == "__main__":
                         brightness_2, INCREASE_INTERVAL_ABOVE))
                     controller.increase_interval()
 
+                    status_interval_mode = "INC"
+
                 elif brightness_1 is not None and brightness_1 < REDUCE_INTERVAL_BELOW:
 
                     # take images slower
@@ -724,6 +771,47 @@ if __name__ == "__main__":
                     log.debug("request interval reduction (brightness: {:.6f} < {})".format(
                         brightness_1, REDUCE_INTERVAL_BELOW))
                     controller.reduce_interval()
+
+                    status_interval_mode = "DEC"
+
+                # ---  STATUS timestamp|images_taken|free_space|temp_pi|temp_controller|battery_volt|battery_percentage
+                
+                status_data = {}
+
+                status_data["timestamp"]            = int(datetime.now().timestamp())
+
+                if status_images_taken is None:
+                    _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
+                    status_images_taken             = int(filename_iteration)
+                status_data["images_taken"]     = status_images_taken
+
+                status_data["free_space"]           = "_"
+                if status_free_space_mb is not None:
+                    status_data["free_space"]       = "{:5.2f}".format(status_free_space_mb)
+
+                status_data["temp_pi"]              = "_"
+                if status_temp_pi is not None:
+                    status_data["temp_pi"]          = "{:5.2f}".format(status_temp_pi)
+
+                status_data["temp_controller"]      = "_"
+                if status_temp_controller is not None:
+                    status_data["temp_controller"]  = "{:5.2f}".format(status_temp_controller)
+
+                status_data["interval_mode"]        = "_"
+                if status_interval_mode is not None:
+                    status_data["interval_mode"]    = status_interval_mode
+
+                status_data["battery_volt"]         = "_"
+                if status_battery_volt is not None:
+                    status_data["battery_volt"]     = "{:5.2f}".format(status_battery_volt)
+
+                status_data["battery_percentage"]   = "_"
+                if status_battery_perc is not None:
+                    status_data["battery_percentage"] = "{:5.2f}".format(status_battery_perc)
+
+                log.info("STATUS {timestamp}|{images_taken}|{free_space}|{temp_pi}|{temp_controller}|{interval_mode}|{battery_volt}|{battery_percentage}".format(**status_data))
+
+                # ---
 
                 controller.shutdown(delay=15000)
 
