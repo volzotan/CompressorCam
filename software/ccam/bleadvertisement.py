@@ -4,8 +4,9 @@ import subprocess
 import time
 import logging as log
 
-BLE_ADVERTISEMENT_PAYLOAD_LENGTH = 31 #26
-PREAMBLE = [0x01, 0x02, 0x03, 0x04]
+BLE_ADVERTISEMENT_PAYLOAD_LENGTH    = 31
+PREAMBLE                            = [0x01, 0x02, 0x03, 0x04]
+ADVERTISE_INDEFINITELY              = True
 
 def _format_message(data):
 
@@ -39,7 +40,7 @@ def advertise(data):
 
     payload = bytes()
 
-    payload += bytes([0x1E]) # ??? Simple Pairing Randomizer
+    payload += bytes([0x1E]) # ???
 
     payload += bytes([0x02]) # length:  2 bytes
     payload += bytes([0x01]) # AD type: flags (0x01)   
@@ -81,13 +82,13 @@ def advertise(data):
     subprocess.run(call_config, check=True, shell=True)
     subprocess.run(call_start,  check=True, shell=True)
 
-    log.debug("sending BLE advertisement")
+    log.debug("starting BLE advertisement")
 
-    time.sleep(10)
+    if not ADVERTISE_INDEFINITELY:
+        time.sleep(10)
+        subprocess.run(call_stop,   check=True, shell=True)
+        log.debug("finished BLE advertisement")
 
-    subprocess.run(call_stop,   check=True, shell=True)
-
-    log.debug("finished BLE advertisement")
 
 if __name__ == "__main__":
 

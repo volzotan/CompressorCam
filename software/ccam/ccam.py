@@ -118,22 +118,22 @@ def read_exif_data(filename):
 
 def print_exposure_settings(camera):
 
-    STATETMENT = "{:25s}: {}"
+    STATEMENT = "{:25s}: {}"
 
-    print(STATETMENT.format("Shutter speed (0=auto)", camera.shutter_speed))
-    print(STATETMENT.format("ISO", camera.iso))
-    print(STATETMENT.format("Analog gain", camera.analog_gain))
-    print(STATETMENT.format("Digital gain", camera.digital_gain))
-    print(STATETMENT.format("Exp speed", camera.exposure_speed))
-    print(STATETMENT.format("Exp mode", camera.exposure_mode))
-    print(STATETMENT.format("Exp compensation", camera.exposure_compensation))
-    print(STATETMENT.format("Meter mode", camera.meter_mode))
-    print(STATETMENT.format("Framerate", camera.framerate))
-    print(STATETMENT.format("brightness", camera.brightness))
-    print(STATETMENT.format("Awb mode", camera.awb_mode))
-    print(STATETMENT.format("Drc strength", camera.drc_strength))
-    print(STATETMENT.format("Brightness meter mode", camera.meter_mode))
-    print(STATETMENT.format("Resolution", camera.resolution))
+    print(STATEMENT.format("Shutter speed (0=auto)", camera.shutter_speed))
+    print(STATEMENT.format("ISO", camera.iso))
+    print(STATEMENT.format("Analog gain", camera.analog_gain))
+    print(STATEMENT.format("Digital gain", camera.digital_gain))
+    print(STATEMENT.format("Exp speed", camera.exposure_speed))
+    print(STATEMENT.format("Exp mode", camera.exposure_mode))
+    print(STATEMENT.format("Exp compensation", camera.exposure_compensation))
+    print(STATEMENT.format("Meter mode", camera.meter_mode))
+    print(STATEMENT.format("Framerate", camera.framerate))
+    print(STATEMENT.format("brightness", camera.brightness))
+    print(STATEMENT.format("Awb mode", camera.awb_mode))
+    print(STATEMENT.format("Drc strength", camera.drc_strength))
+    print(STATEMENT.format("Brightness meter mode", camera.meter_mode))
+    print(STATEMENT.format("Resolution", camera.resolution))
 
     print("--- --- ---")
 
@@ -673,8 +673,8 @@ if __name__ == "__main__":
         
             data["battery"] = status_battery_perc
 
-        # _ = pool.submit(advertise, (data))
-        advertise(data)
+        _ = pool.submit(advertise, (data))
+        # advertise(data)
 
 
     # get EV of last (primary) image and reduce if brighter than threshold
@@ -774,7 +774,11 @@ if __name__ == "__main__":
 
                     status_interval_mode = "DEC"
 
-                # ---  STATUS timestamp|images_taken|free_space|temp_pi|temp_controller|battery_volt|battery_percentage
+                else:
+
+                    status_interval_mode = "NRM"
+
+                # ---  STATUS timestamp|images_taken|free_space|temp_pi|temp_controller|interval_mode|battery_volt|battery_percentage
                 
                 status_data = {}
 
@@ -783,7 +787,7 @@ if __name__ == "__main__":
                 if status_images_taken is None:
                     _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
                     status_images_taken             = int(filename_iteration)
-                status_data["images_taken"]     = status_images_taken
+                status_data["images_taken"]         = status_images_taken
 
                 status_data["free_space"]           = "_"
                 if status_free_space_mb is not None:
@@ -829,7 +833,11 @@ if __name__ == "__main__":
                 sleep(4)
 
                 subprocess.call(["poweroff"])
+
+                # note: exit() won't be performed as long as 
+                # ThreadPoolExecutor still has running threads
                 exit()
+
             except Exception as e:
                 log.error("poweroff failed: {}".format(e))
         else:
