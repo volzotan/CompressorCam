@@ -8,10 +8,12 @@
 #define PIN_PIXEL                         10 // PA18
 #define PIN_MUX_STATUS                     2 // PA08                
 
+
 // ----------- OPTIONS -----------
 
 #define LIPO_CELL_MIN                    3.1
 #define LIPO_CELL_MAX                    4.2
+
 
 // ----------- MISC -----------
 
@@ -21,6 +23,7 @@
 #define VDBASEVOLTAGE                    3.3
 #define VDRESISTOR1                      100
 #define VDRESISTOR2                       33
+
 
 // ----------- ERROR CODES -----------
 

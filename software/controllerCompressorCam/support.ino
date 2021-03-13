@@ -71,10 +71,7 @@ void wait() {
 
     #ifdef DEEP_SLEEP
 
-        int s = rtc.getSeconds() + 1;
-        s = s % 60;
-        rtc.setAlarmSeconds(s);
-
+        rtc.setAlarmSeconds((rtc.getSeconds() + 1) % 60);
         rtc.attachInterrupt(alarmFired);
         rtc.enableAlarm(rtc.MATCH_SS);
         delay(10);

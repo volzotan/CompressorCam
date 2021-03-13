@@ -11,9 +11,9 @@
 // #define WAIT_ON_BOOT_FOR_SERIAL
 
 #define SHUTDOWN_ON_LOW_BATTERY
-// #define DEEP_SLEEP
+#define DEEP_SLEEP
 // #define HOST_DEFAULT_POWERED_ON
-#define VERSION                     12.0
+#define VERSION                     13.0
 
 #define SERIAL Serial1
 #define SERIAL_DEBUG SerialUSB
@@ -26,13 +26,13 @@
 
 // #include "settings_revG.h"
 // #include "settings_revH.h"
-#include "settings_revI.h"
-// #include "settings_revJ.h"
+// #include "settings_revI.h"
+#include "settings_revJ.h"
 
 // ---------------------------
 
-#define TRIGGER_INTERVAL        120 *1000       // take picture every X seconds [ms]
-#define TRIGGER_INTERVAL_RED    600 *1000
+#define TRIGGER_INTERVAL        180 *1000       // take picture every X seconds [ms]
+#define TRIGGER_INTERVAL_RED    900 *1000
 #define TRIGGER_INTERVAL_INC    60  *1000
 
 #define TRIGGER_MAX_ACTIVE      59  *1000       // zero & cam max time on [ms]
@@ -367,8 +367,8 @@ void loop() {
                 state = STATE_IDLE;
             }
 
-            // stay active and do not enter deep sleep since communication
-            // via UART will happen
+            // stay active and do not enter deep sleep 
+            // since communication via UART will happen
 
             break;
         }
