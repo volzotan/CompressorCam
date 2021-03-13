@@ -49,7 +49,7 @@ def advertise(data):
     payload += bytes([0x1A]) # length:  26 bytes
     payload += bytes([0xFF]) # AD type: Manufacturer Specific Data (0xFF)
 
-    payload += _left_pad(PREAMBLE,              4)
+    payload += _left_pad(PREAMBLE,                  4)
 
     if type(data["id"]) is bytes:
         payload += data["id"]
@@ -64,8 +64,6 @@ def advertise(data):
     payload += int(data["temp"]).to_bytes(          2, byteorder="big", signed=True) 
     payload += int(data["battery"]).to_bytes(       2, byteorder="big", signed=True)     
 
-    # payload = bytes(payload)
-
     if len(payload) > BLE_ADVERTISEMENT_PAYLOAD_LENGTH:
         raise Exception("payload of length {} exceeds maximum length {}".format(len(payload), BLE_ADVERTISEMENT_PAYLOAD_LENGTH))
 
@@ -75,7 +73,7 @@ def advertise(data):
 
     call_config = call_config.format(_format_message(payload))
 
-    log.debug("raw hcitool command: {}".format(call_config))
+    # log.debug("raw hcitool command: {}".format(call_config))
 
     subprocess.run(call_attach, check=False, shell=True)
     subprocess.run(call_up,     check=False, shell=True)
@@ -88,9 +86,13 @@ def advertise(data):
         time.sleep(10)
         subprocess.run(call_stop,   check=True, shell=True)
         log.debug("finished BLE advertisement")
+    else:
+        log.debug("permanent BLE advertisement")
 
 
 if __name__ == "__main__":
+
+    # random stuff for testing
 
     data = {}
     data["id"]              = 123456

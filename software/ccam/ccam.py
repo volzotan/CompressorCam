@@ -153,6 +153,21 @@ def log_capture_info(camera, filename):
     log.info("{:24s}: {} {:4.2f} | {:4.2f}".format("awb", camera.awb_mode, float(awb_gains[0]), float(awb_gains[1])))
 
 
+def get_uptime():    
+
+    uptime = None
+
+    try:
+        f = open('/proc/uptime','r')
+        for line in f:
+            uptime = float(line.split(" ")[0])
+        f.close()
+    except Exception as e:
+        log.warn("reading uptime failed: {}".format(e))
+
+    return uptime
+
+
 def get_serial():
 
     serial = None
@@ -431,12 +446,12 @@ if __name__ == "__main__":
 
     # tvservice off
 
-    # calling tvservice freezes in newest buildroot/
+    # calling tvservice may freeze in newest buildroot
 
-    # try:
-    #     subprocess.run(["tvservice", "-o"], timeout=1)    
-    # except Exception as e:
-    #     log.info("disabling tvservice error: {}".format(e))
+    try:
+        subprocess.run(["tvservice", "-o"], timeout=1)    
+    except Exception as e:
+        log.info("disabling tvservice error: {}".format(e))
 
     # ---------------------------------------------------------------------------------------
 
@@ -458,6 +473,7 @@ if __name__ == "__main__":
     log.info("WRITE RAW         : {}".format(WRITE_RAW))
     log.info("MODULO RAW        : {}".format(MODULO_RAW))
     log.info("EVEN ODD DELETION : {}".format(EVEN_ODD_DELETION_CAPTURE_1))
+    log.info("BLUETOOTH ADV.    : {}".format(SEND_BLE_ADVERTISEMENT))
 
     log.info("------------------------------------------")
 
@@ -638,7 +654,7 @@ if __name__ == "__main__":
         log.warn("reading pi temperature failed: {}".format(e))
     log.info("temperature [pi]        : {:.2f}".format(status_temp_pi))
 
-    # checking if BLE advertisement should be sent
+    # BLE advertisement
 
     if SEND_BLE_ADVERTISEMENT:
 
@@ -654,7 +670,7 @@ if __name__ == "__main__":
         _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
         data["images_taken"] = int(filename_iteration)
 
-        data["errors"] = 2  # 2 byte # TODO
+        data["errors"] = 0  # 2 byte # TODO
         data["mode"] = 0    # 1 byte # TODO
 
         data["free_space"] = status_free_space_mb
@@ -821,6 +837,10 @@ if __name__ == "__main__":
 
                 log.debug("shutdown command sent")
                 log.info("POWEROFF")
+
+                uptime = get_uptime()
+                if uptime is not None:
+                    log.info("uptime                  : {:.3f} sec".format(uptime))
                 
                 log.debug("logging shutdown")
                 logging.shutdown()
@@ -852,6 +872,10 @@ if __name__ == "__main__":
     print("sync done. took: {:.3f} sec".format(diff))
 
     print("------------------------")
+
+    uptime = get_uptime()
+    if uptime is not None:
+        log.info("uptime                  : {:.3f} sec".format(uptime))
 
     diff = datetime.now().timestamp() - start_global
     print("total runtime           : {:.3f} sec".format(diff))
