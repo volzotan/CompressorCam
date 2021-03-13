@@ -51,6 +51,12 @@ ssh $HOSTNAME 'sh /root/resize_fs.sh'
 echo "sleep 20s"
 sleep 20
 
+# re-run resize_fs.sh to actually create the filesystem at the full size
+ssh $HOSTNAME 'sh /root/resize_fs.sh'
+
+echo "sleep 20s"
+sleep 20
+
 # ------------------------------------------
 
 echo "\n---"
