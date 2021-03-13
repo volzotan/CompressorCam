@@ -129,8 +129,9 @@ class CompressorCameraController(Controller):
     STATE_UPLOAD        = 10
     STATE_STREAM        = 11
 
-    SERIAL_BAUDRATE     = 9600
-    SERIAL_TIMEOUT      = 1.0
+    SERIAL_BAUDRATE         = 9600
+    SERIAL_TIMEOUT_READ     = 0.2
+    SERIAL_TIMEOUT_WRITE    = 0.2
 
     lock = Lock()
 
@@ -287,7 +288,7 @@ class CompressorCameraController(Controller):
             if not lock_acquired:
                 raise AccessException("Lock could not be acquired")
 
-            ser = serial.Serial(self.port, self.SERIAL_BAUDRATE, timeout=self.SERIAL_TIMEOUT, write_timeout=self.SERIAL_TIMEOUT)
+            ser = serial.Serial(self.port, self.SERIAL_BAUDRATE, timeout=self.SERIAL_TIMEOUT_READ, write_timeout=self.SERIAL_TIMEOUT_WRITE)
 
             ser.write(bytearray(full_cmd, "utf-8"))
             ser.write(bytearray("\n", "utf-8"))
