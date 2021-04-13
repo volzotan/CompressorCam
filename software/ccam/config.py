@@ -1,9 +1,13 @@
+SENSOR_MODE                     = 3
+
 SECOND_EXPOSURE_SHUTTER_SPEED   = 9
 SECOND_EXPOSURE_ISO             = 25
 THIRD_EXPOSURE_SHUTTER_SPEED    = SECOND_EXPOSURE_SHUTTER_SPEED*(2**7)
 FOURTH_EXPOSURE_SHUTTER_SPEED   = SECOND_EXPOSURE_SHUTTER_SPEED*(2**11)
 FIFTH_EXPOSURE_SHUTTER_SPEED    = 2*1000*1000
 EXPOSURE_COMPENSATION           = 4 # 6 = +1 stop
+
+DISABLE_HDMI                    = True
 
 SHUTDOWN_ON_COMPLETE            = True 
 CHECK_FOR_INTERVAL_REDUCE       = True
@@ -24,6 +28,8 @@ IMAGE_FORMAT                    = "jpeg"    # JPG format # V2: ~ 4.5 mb | 14 mb 
 WRITE_RAW                       = True
 MODULO_RAW                      = 5        # only every n-th image contains RAW data, set to None to use WRITE_RAW
 
+CHECK_IF_MOUNTED                = True
+
 BASE_DIR                        = "/media/storage/"
 OUTPUT_DIR_1                    = BASE_DIR + "captures_regular"
 OUTPUT_DIR_2                    = BASE_DIR + "captures_low1"
@@ -31,6 +37,7 @@ OUTPUT_DIR_3                    = BASE_DIR + "captures_low2"
 OUTPUT_DIR_4                    = BASE_DIR + "captures_low3"
 OUTPUT_DIR_5                    = BASE_DIR + "captures_low4"
 OUTPUT_FILENAME                 = "cap"
+USE_TIMESTAMP_PREFIX            = False
 
 LOG_FILE                        = BASE_DIR + "log_ccam.log"
 

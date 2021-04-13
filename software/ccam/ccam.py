@@ -201,7 +201,7 @@ def calculate_brightness(filename):
 
 # all extensions are checked for duplicate filenames, first extension 
 # is returned as file name candidate
-def get_filename(extensions): # returns(path, filename.ext)
+def get_filename(extensions, prefix=None): # returns(path, filename.ext)
 
     if not type(extensions) is list:
         extensions = [extensions]
@@ -213,6 +213,8 @@ def get_filename(extensions): # returns(path, filename.ext)
     for i in range(0, 100000):
 
         filename_base = "{}_{:06d}.".format(OUTPUT_FILENAME, i)
+        if not prefix is None:
+            filename_base = prefix + filename_base
         duplicate_found = False
 
         for extension in extensions:
@@ -263,7 +265,7 @@ def trigger():
     image_info = []
 
     # starts hidden preview for 3A automatically
-    camera = picamera.PiCamera(sensor_mode=3) 
+    camera = picamera.PiCamera(sensor_mode=SENSOR_MODE) 
 
     # sensor modes:
     # MODE  : SETTING           : CAMERA 
@@ -300,14 +302,19 @@ def trigger():
 
     log.debug("------ exposure 1 ------")
 
-    filename_path, filename, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
+    prefix = None
+    if USE_TIMESTAMP_PREFIX:
+        prefix = "{}_".format(int(datetime.now().timestamp()))
+
+    filename_path, filename, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"], prefix=prefix)
     full_filename = os.path.join(filename_path, filename)
 
     capture_raw = WRITE_RAW
-    if MODULO_RAW is not None and filename_iteration % MODULO_RAW == 0:
-        capture_raw = True
-    else:
-        capture_raw = False
+    if WRITE_RAW and MODULO_RAW is not None:
+        if filename_iteration % MODULO_RAW == 0:
+            capture_raw = True
+        else:
+            capture_raw = False
 
     camera.capture(full_filename, format=IMAGE_FORMAT, bayer=capture_raw)
     
@@ -448,10 +455,11 @@ if __name__ == "__main__":
 
     # calling tvservice may freeze in newest buildroot
 
-    try:
-        subprocess.run(["tvservice", "-o"], timeout=1)    
-    except Exception as e:
-        log.info("disabling tvservice error: {}".format(e))
+    if DISABLE_HDMI:
+        try:
+            subprocess.run(["tvservice", "-o"], timeout=1)    
+        except Exception as e:
+            log.info("disabling tvservice error: {}".format(e))
 
     # ---------------------------------------------------------------------------------------
 
@@ -527,7 +535,7 @@ if __name__ == "__main__":
 
     # checking for directories
 
-    if not os.path.ismount(BASE_DIR):
+    if CHECK_IF_MOUNTED and not os.path.ismount(BASE_DIR):
         log.error("mounting {} failed. exit!".format(BASE_DIR))
         controller.set_led(10, 0, 10)
         exit(1)
@@ -667,7 +675,7 @@ if __name__ == "__main__":
 
         data["uptime"] = datetime.now().timestamp()
 
-        _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
+        _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"]) # TODO: does not work with filename prefixes. Rather just count all files in the directory
         data["images_taken"] = int(filename_iteration)
 
         data["errors"] = 0  # 2 byte # TODO
@@ -801,7 +809,7 @@ if __name__ == "__main__":
                 status_data["timestamp"]            = int(datetime.now().timestamp())
 
                 if status_images_taken is None:
-                    _, _, filename_iteration = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"])
+                    _, _, filename_iteration        = get_filename([IMAGE_FORMAT, "jpg.gz", "jpeg.gz"]) # TODO: count files in dir
                     status_images_taken             = int(filename_iteration)
                 status_data["images_taken"]         = status_images_taken
 
