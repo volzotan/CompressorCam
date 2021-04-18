@@ -422,7 +422,8 @@ if __name__ == "__main__":
     # ---------------------------------------------------------------------------------------
 
     # create logger
-    log = logging.getLogger() #"oneshot")
+    log = logging.getLogger()
+    log.handlers = [] # remove externally inserted handlers (systemd?)
     log.setLevel(logging.DEBUG)
 
     # subloggers
