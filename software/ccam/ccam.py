@@ -369,29 +369,33 @@ def trigger():
     # read_exif_data(full_filename_2)
     # print_exposure_settings(camera)
 
-    log.debug("------ exposure 3 ------")
+    if THIRD_EXPOSURE_SHUTTER_SPEED is not None:
 
-    camera.shutter_speed = THIRD_EXPOSURE_SHUTTER_SPEED
+        log.debug("------ exposure 3 ------")
 
-    sleep(0.5)
+        camera.shutter_speed = THIRD_EXPOSURE_SHUTTER_SPEED
 
-    full_filename_3 = os.path.join(OUTPUT_DIR_3, filename)
-    camera.capture(full_filename_3, format=IMAGE_FORMAT)
-    log_capture_info(camera, full_filename_3)
+        sleep(0.5)
 
-    image_info.append([full_filename_3, None, filename_iteration])
+        full_filename_3 = os.path.join(OUTPUT_DIR_3, filename)
+        camera.capture(full_filename_3, format=IMAGE_FORMAT)
+        log_capture_info(camera, full_filename_3)
 
-    log.debug("------ exposure 4 ------")
+        image_info.append([full_filename_3, None, filename_iteration])
 
-    camera.shutter_speed = FOURTH_EXPOSURE_SHUTTER_SPEED
+    if FOURTH_EXPOSURE_SHUTTER_SPEED is not None:
 
-    sleep(0.5)
+        log.debug("------ exposure 4 ------")
 
-    full_filename_4 = os.path.join(OUTPUT_DIR_4, filename)
-    camera.capture(full_filename_4, format=IMAGE_FORMAT)
-    log_capture_info(camera, full_filename_4)
+        camera.shutter_speed = FOURTH_EXPOSURE_SHUTTER_SPEED
 
-    image_info.append([full_filename_4, None, filename_iteration])
+        sleep(0.5)
+
+        full_filename_4 = os.path.join(OUTPUT_DIR_4, filename)
+        camera.capture(full_filename_4, format=IMAGE_FORMAT)
+        log_capture_info(camera, full_filename_4)
+
+        image_info.append([full_filename_4, None, filename_iteration])
 
     # log.debug("------ exposure 5 ------")
 
