@@ -200,7 +200,7 @@ def main():
     parser.add_argument(
         "processingmode",
         default=stacker.PROCESSING_MODE_STACK,
-        choices=[stacker.PROCESSING_MODE_STACK, stacker.PROCESSING_MODE_PEAK], 
+        choices=[stacker.PROCESSING_MODE_STACK, stacker.PROCESSING_MODE_PEAK, stacker.PROCESSING_MODE_SLICE], 
         help=blockstring_to_string("""
         '{}' blends several correctly exposed images to a single long exposure image. 
         '{}' blends several underexposed images to a peaked image showing the burned parts.
@@ -220,14 +220,45 @@ def main():
         help="output directory for results"
     )
 
+    parser.add_argument(
+        "--sort-reverse",
+        action="store_true",
+        help="Reverse the order of the input images"
+    )
+
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        default=False,
+        help="debug output"
+    )
+
+    parser.add_argument(
+        "--slice-start",
+        type=int,
+        default=0, 
+        help=""
+    )
+
+    parser.add_argument(
+        "--slice-end",
+        type=int,
+        default=-1, 
+        help=""
+    )
+
     args = parser.parse_args()
 
     # initialize logger
 
     logger = log.getLogger() 
-    logger.setLevel(log.DEBUG)
+    log_level = log.INFO
 
-    log.basicConfig(level=log.DEBUG)
+    if args.debug:
+        log_level = log.DEBUG
+
+    logger.setLevel(log_level)
+    log.basicConfig(level=log_level)
     #                     format="%(asctime)s | %(levelname)-7s | %(message)s",
     #                     datefmt='%m-%d %H:%M',
     # )
@@ -320,14 +351,26 @@ def main():
     #     input_images_stack = input_images_stack_nonempty
     #     print("skipped {} images darker than {}".format(num_skipped, config.MIN_BRIGHTNESS_THRESHOLD))
 
-    if len(input_images_stack) == 0:
-        log.error("no input images found. exiting...")
-        exit(0)
-
     # sort
 
     if config.SORT_IMAGES:
         input_images_stack = sorted(input_images_stack, key=_sort_helper)
+
+    if args.sort_reverse:
+        input_images_stack.reverse()
+
+    # slice
+
+    if args.slice_start is not None and args.slice_end is not None and args.slice_end > 0:
+        input_images_stack = input_images_stack[args.slice_start:args.slice_end]
+    elif args.slice_start is not None:
+        input_images_stack = input_images_stack[args.slice_start:]
+
+    # validation
+
+    if len(input_images_stack) == 0:
+        log.error("no input images found. exiting...")
+        exit(0)
 
     # config file loading
 

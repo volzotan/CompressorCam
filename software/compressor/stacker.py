@@ -51,11 +51,14 @@ except ImportError as e:
 
 PROCESSING_MODE_STACK           = "stack"
 PROCESSING_MODE_PEAK            = "peak"
+PROCESSING_MODE_SLICE           = "slice"
 
 DEFAULT_APERTURE                = 8.0
 EV_OFFSET                       = 26
 
 TIFF_SUPPORT                    = True
+
+NUM_SLICES                      = 60
 
 try:
     import cv2
@@ -139,7 +142,6 @@ class Stack(object):
         # initialize log
 
         self.log = logging.getLogger("stacker")
-        self.log.setLevel(logging.DEBUG)
         self.log.debug("init")
 
 
@@ -421,6 +423,8 @@ class Stack(object):
                         shutter = float(shutter)
                 except Exception as e:
                     self.log.error("EXIF data missing for image: {} (error: {})".format(image, e))
+                    import traceback
+                    self.log.error(traceback.format_exc())
                     sys.exit(-1)
 
                 iso = metadata["EXIF ISOSpeedRatings"].values[0]
@@ -682,6 +686,38 @@ class Stack(object):
                 brighter_mask = np.logical_and(brighter_mask, min_brightness_mask)
                 self.tresor[brighter_mask] = data[brighter_mask]
 
+            elif self.PROCESSING_MODE == PROCESSING_MODE_SLICE:
+
+                ind = self.input_images.index(f)
+                num_images = len(self.input_images)
+                # slice_width = max(1, int(num_images/self.DIMENSIONS[1]))
+                # start = ind * slice_width
+                # end = min(self.DIMENSIONS[1], start + slice_width)
+
+                pixels_per_slice = math.floor(self.DIMENSIONS[1] / NUM_SLICES)
+                images_per_slice = math.ceil(num_images / NUM_SLICES)  
+
+                self.tresor2 = np.add(self.tresor2, data)
+
+                if (ind+1) % images_per_slice == 0:
+
+                    number_slice = int(ind / images_per_slice)
+                    start = number_slice * pixels_per_slice
+                    end = start + pixels_per_slice
+
+                    self.tresor[:,start:end] = self.tresor2[:,start:end]/images_per_slice
+                    self.tresor2.fill(0)
+
+                    print("num {} ind {} img {} px {} start {} end {}".format(number_slice, ind, images_per_slice, pixels_per_slice, start, end))
+
+                elif ind == num_images-1:
+                    end = self.DIMENSIONS[1]-1
+                    start = end - pixels_per_slice+1
+                    self.tresor[:,start:end] = self.tresor2[:,start:end]/(ind % images_per_slice)
+                    self.tresor2.fill(0)
+
+                    print("ind {} img {} px {} start {} end {}".format(ind, images_per_slice, pixels_per_slice, start, end))              
+
             else:   
                 self.log.error("unknown PROCESSING_MODE: {}".format(self.PROCESSING_MODE))
                 exit(-1)
@@ -727,6 +763,9 @@ class Stack(object):
             self.DIMENSIONS = (shape[1], shape[0])
 
         self.tresor = np.zeros((self.DIMENSIONS[1], self.DIMENSIONS[0], 3), dtype=np.uint64)
+
+        if self.PROCESSING_MODE == PROCESSING_MODE_SLICE:
+            self.tresor2 = np.zeros((self.DIMENSIONS[1], self.DIMENSIONS[0], 3), dtype=np.uint64)            
         
         self.stop_time("initialization: {0:.3f}{1}")
 
