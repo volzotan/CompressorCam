@@ -1,3 +1,6 @@
+sudo apt-get update
+sudo apt-get install -y binutils make unzip build-essential gcc libncurses5-dev
+
 # setup buildroot with basic defconfig
 
 make BR2_EXTERNAL=../external_tree zeroroot_defconfig
