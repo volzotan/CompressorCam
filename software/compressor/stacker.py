@@ -58,7 +58,7 @@ EV_OFFSET                       = 26
 
 TIFF_SUPPORT                    = True
 
-NUM_SLICES                      = 60
+NUM_SLICES                      = 24 #*2
 
 try:
     import cv2

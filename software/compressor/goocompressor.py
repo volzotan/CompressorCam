@@ -293,6 +293,8 @@ def main():
             args.outputdir = args.inputdir + "_stacked"
         elif args.processingmode == stacker.PROCESSING_MODE_PEAK:
             args.outputdir = args.inputdir + "_peaked"
+        elif args.processingmode == stacker.PROCESSING_MODE_SLICE:
+            args.outputdir = args.inputdir + "_sliced"
         else:
             args.outputdir = args.inputdir + "_undefined" 
 
