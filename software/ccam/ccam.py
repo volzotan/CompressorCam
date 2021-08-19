@@ -283,6 +283,11 @@ def trigger():
     camera.exposure_compensation = EXPOSURE_COMPENSATION
     # camera.iso = 400
 
+    # if specified, set white balance mode for the first exposure
+    # (all other exposures are always set at awb mode "sunlight")
+    if FIRST_EXPOSURE_AWB_MODE is not None:
+        camera.awb_mode = FIRST_EXPOSURE_AWB_MODE
+
     resolutions = {}
     resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
     resolutions["V2"] = [[3280, 2464], Fraction(1, 2)]
