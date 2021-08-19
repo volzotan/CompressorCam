@@ -110,7 +110,7 @@ void executeCommand() {
             
         case 'S': // Shutdown 
             if (serialParam > 0) {
-                if (state != STATE_TRIGGER_WAIT) {
+                if (!(state == STATE_TRIGGER_WAIT || state == STATE_STREAM)) {
                     errorSerial(ERRORCODE_INVALID_PARAM);
                     break;
                 }

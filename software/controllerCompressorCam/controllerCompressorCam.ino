@@ -243,6 +243,14 @@ void loop() {
 
             // delay(100);
 
+            now = getMillis();
+
+            if (postTriggerWaitDelayed > 0 && now >= postTriggerWaitDelayed) {
+                switchZeroOn(false);
+                stopAndShutdown();
+            }
+
+            delay(10);
             break;
         }
 
