@@ -200,7 +200,9 @@ class Stack(object):
 
         if fixed_name is None:
             # {0:0Nd}{1} where N is used to pad to the length of the highest number of images (eg. 001 for 256 images)
-            pattern = str("{0:0") + str(len(str(len(self.input_images)))) + str("d}{1}")
+            # pattern = str("{0:0") + str(len(str(len(self.input_images)))) + str("d}{1}")
+
+            pattern = "{0:06d}{1}"
             filename = pattern.format(self.counter, self.EXTENSION)
 
             if force_jpeg:
