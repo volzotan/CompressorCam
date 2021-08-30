@@ -288,6 +288,7 @@ def trigger():
     if FIRST_EXPOSURE_AWB_MODE is not None:
         camera.awb_mode = FIRST_EXPOSURE_AWB_MODE
 
+    camera_type = None
     resolutions = {}
     resolutions["HQ"] = [[4056, 3040], Fraction(1, 2)]
     resolutions["V2"] = [[3280, 2464], Fraction(1, 2)]
@@ -297,13 +298,14 @@ def trigger():
         try:
             camera.resolution = resolutions[key][0]
             camera.framerate = resolutions[key][1]
+            camera_type = key
             log.debug("camera resolution set to [{}]: {}".format(key, resolutions[key][0]))
             break
         except picamera.exc.PiCameraValueError as e:
             log.warning("failing setting camera resolution for {}, attempting fallback".format(key))
 
     # give the 3A algorithms some time for warmup
-    sleep(1)
+    sleep(WARMUP_WAIT)
 
     log.debug("------ exposure 1 ------")
 
@@ -342,7 +344,12 @@ def trigger():
     # increase framerate, otherwise capture will block even on short exposures 
     # for several seconds (sensor mode 3 supports framerates of up to 15fps)
     # (>=16fps will result in 0-value images))
-    camera.framerate = Fraction(10, 1)
+    # sensor mode 3 allows long 1st exposures on V1, but requires lower
+    # framerate on 2nd exposure than V2 or HQ (mode 3@V1: 1/6 <= fps <= 1)
+    if camera_type == "V1":
+        camera.framerate = Fraction(1, 5)
+    else:
+        camera.framerate = Fraction(10, 1)
     camera.exposure_compensation = 0
 
     # set a fixed AWB mode since 'auto' will fail on very dark exposures, resulting
