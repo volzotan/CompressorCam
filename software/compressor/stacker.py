@@ -219,7 +219,7 @@ class Stack(object):
 
         overflow_perc = np.amax(t) / (np.iinfo(np.uint64).max / 100.0)
         if overflow_perc > 70:
-            selg.log.warning("tresor overflow status: {}%".format(round(overflow_perc, 2)))
+            self.log.warning("tresor overflow status: {}%".format(round(overflow_perc, 2)))
 
         if self.APPLY_CURVE:
             if self.weighted_average_divider > 0:
@@ -695,6 +695,10 @@ class Stack(object):
                 # slice_width = max(1, int(num_images/self.DIMENSIONS[1]))
                 # start = ind * slice_width
                 # end = min(self.DIMENSIONS[1], start + slice_width)
+
+                if num_images < NUM_SLICES:
+                    self.log.error("too few images for processing mode SLICE (only {} images but {} slices)".format(num_images, NUM_SLICES))
+                    exit(-1)
 
                 pixels_per_slice = math.floor(self.DIMENSIONS[1] / NUM_SLICES)
                 images_per_slice = math.ceil(num_images / NUM_SLICES)  
