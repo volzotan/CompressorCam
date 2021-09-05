@@ -43,12 +43,12 @@ PICKLE_NAME                     = "stack.pickle"
 ALIGN                           = False
 
 # minimum value for average image brightness for input data filtering
-MIN_BRIGHTNESS_THRESHOLD        = 10
+MIN_BRIGHTNESS_THRESHOLD        = 20
 
 APPLY_CURVE                     = True
 WRITE_METADATA                  = True
 
-SAVE_INTERVAL                   = 100
+SAVE_INTERVAL                   = 1
 INTERMEDIATE_SAVE_FORCE_JPEG    = False # still buggy (values to high for jpeg saving)
 PICKLE_INTERVAL                 = -1
 

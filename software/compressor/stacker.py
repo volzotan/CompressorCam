@@ -696,10 +696,6 @@ class Stack(object):
                 # start = ind * slice_width
                 # end = min(self.DIMENSIONS[1], start + slice_width)
 
-                if num_images < NUM_SLICES:
-                    self.log.error("too few images for processing mode SLICE (only {} images but {} slices)".format(num_images, NUM_SLICES))
-                    exit(-1)
-
                 pixels_per_slice = math.floor(self.DIMENSIONS[1] / NUM_SLICES)
                 images_per_slice = math.ceil(num_images / NUM_SLICES)  
 
@@ -714,15 +710,15 @@ class Stack(object):
                     self.tresor[:,start:end] = self.tresor2[:,start:end]/images_per_slice
                     self.tresor2.fill(0)
 
-                    print("num {} ind {} img {} px {} start {} end {}".format(number_slice, ind, images_per_slice, pixels_per_slice, start, end))
+                    # print("num {} ind {} img {} px {} start {} end {}".format(number_slice, ind, images_per_slice, pixels_per_slice, start, end))
 
                 elif ind == num_images-1:
                     end = self.DIMENSIONS[1]-1
                     start = end - pixels_per_slice+1
-                    self.tresor[:,start:end] = self.tresor2[:,start:end]/(ind % images_per_slice)
+                    self.tresor[:,start:end] = self.tresor2[:,start:end]/((ind % images_per_slice) + 1)
                     self.tresor2.fill(0)
 
-                    print("ind {} img {} px {} start {} end {}".format(ind, images_per_slice, pixels_per_slice, start, end))              
+                    # print("ind {} img {} px {} start {} end {}".format(ind, images_per_slice, pixels_per_slice, start, end))              
 
             else:   
                 self.log.error("unknown PROCESSING_MODE: {}".format(self.PROCESSING_MODE))
@@ -771,6 +767,10 @@ class Stack(object):
         self.tresor = np.zeros((self.DIMENSIONS[1], self.DIMENSIONS[0], 3), dtype=np.uint64)
 
         if self.PROCESSING_MODE == PROCESSING_MODE_SLICE:
+            if len(self.input_images) < NUM_SLICES:
+                self.log.error("too few images for processing mode SLICE (only {} images but {} slices)".format(len(self.input_images), NUM_SLICES))
+                exit(-1)
+
             self.tresor2 = np.zeros((self.DIMENSIONS[1], self.DIMENSIONS[0], 3), dtype=np.uint64)            
         
         self.stop_time("initialization: {0:.3f}{1}")
