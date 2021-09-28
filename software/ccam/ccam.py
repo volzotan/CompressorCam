@@ -277,11 +277,10 @@ def trigger():
     # 2     : 0.1-50fps         : HQ (2x2 binned = half resolution)
     # 3     : 0.005-10fps       : HQ
 
-    camera.exposure_mode = "verylong"
+    # camera.exposure_mode = "verylong"
     
     camera.meter_mode = "average"
     camera.exposure_compensation = EXPOSURE_COMPENSATION
-    # camera.iso = 400
 
     # if specified, set white balance mode for the first exposure
     # (all other exposures are always set at awb mode "sunlight")
@@ -297,7 +296,7 @@ def trigger():
     for key in resolutions.keys():
         try:
             camera.resolution = resolutions[key][0]
-            camera.framerate = resolutions[key][1]
+            # camera.framerate = resolutions[key][1]
             camera_type = key
             log.debug("camera resolution set to [{}]: {}".format(key, resolutions[key][0]))
             break
@@ -340,6 +339,11 @@ def trigger():
     # print_exposure_settings(camera)
 
     log.debug("------ exposure 2 ------")
+
+    # close and reopen
+    camera.close()
+    camera = picamera.PiCamera(sensor_mode=SENSOR_MODE) 
+    camera.resolution = resolutions[camera_type][0]
 
     # increase framerate, otherwise capture will block even on short exposures 
     # for several seconds (sensor mode 3 supports framerates of up to 15fps)
