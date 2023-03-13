@@ -1,10 +1,12 @@
-Gooey provides a GUI for the `stacker.py` script. Run `python3 goocompressor.py` to start the application.
+# Intro
+
+[Gooey](https://github.com/chriskiehl/Gooey) provides a GUI for the `stacker.py` script. Run `python3 goocompressor.py` to start the application.
 
 # Requirements:
 
     pip install -r requirements.txt
 
-# Ubuntu:
+## Ubuntu:
 
     sudo apt-get install python-dev python-pyexiv2
     sudo apt-get install python3-gi
@@ -21,9 +23,9 @@ build the newest opencv3, not the one from the distribution repository (probably
 
     sudo apt-get install libqt4-core libqt4-dev libqt4-gui qt4-dev-tools
 
-# OSX
+## OSX
 
-## EXIF related:
+### EXIF related:
 
     brew install pygobject3
 
@@ -33,7 +35,7 @@ install pygobject via pip (requirements need to be installed separately):
     brew install libffi
     pip install pygobject
 
-If libffi.h can not be found, it may be necessary to set the path manually.
+If `libffi.h` can not be found, it may be necessary to set the path manually.
 
 Run `brew info libffi` to get the location of the files (in my case):
 
@@ -44,7 +46,7 @@ Run `brew info libffi` to get the location of the files (in my case):
 
 and run the export commands before installing pygobject via pip.
 
-## Gooey Debugging
+# Gooey Debugging
 
 pyinstaller and gooey may behave weird sometimes and make debugging a hassle.  
 To actually get an exception, build the .app bundle, cd to dist and run the application manually via  
